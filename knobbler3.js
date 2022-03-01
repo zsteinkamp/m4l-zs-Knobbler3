@@ -22,7 +22,7 @@ var initMappingDone = false;
 
 init();
 
-//post("\n");
+post("\n");
 
 function init() {
   api = null;
