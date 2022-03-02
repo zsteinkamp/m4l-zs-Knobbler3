@@ -9,6 +9,7 @@ var OUTLET_MAPPED = 4;
 var OUTLET_MAP_ID = 5;
 
 var paramObj = null;
+var paramNameObj = null;
 var deviceObj = null;
 var trackObj = null;
 
@@ -32,8 +33,30 @@ var debugLog = false;
 
 post("reloaded\n");
 
+function setInitMapping(objId) {
+  debug("SEt_INIT_MAPPING\n");
+  initMappingId = objId;
+}
+
+function doInit() {
+  debug("DO_INIT\n");
+  //post("INIT_MAPPING=", initMappingId, "DONE=", initMappingDone, "\n");
+  init();
+  if (!initMappingDone) {
+    initMappingDone = true;
+    if (initMappingId > 0) {
+      //post("INIT_MAPPING_ID", initMappingId, "\n");
+      setPath(["id", initMappingId]);
+    }
+  }
+}
+
 function init() {
   debug("INIT\n");
+  if (paramObj) {
+    // clean up callbacks when unmapping
+    paramObj.id = 0;
+  }
   paramObj = null;
   param = {};
   sendNames();
@@ -70,7 +93,7 @@ function setMax(val) {
   }
 }
 
-function valueCallback(args) {
+function paramValueCallback(args) {
   // This function is called whenever the parameter value changes,
   // either via mapped MIDI control or by changing the device directly.
   // We need to distinguish between the two and not do anything if the
@@ -84,9 +107,19 @@ function valueCallback(args) {
   if (allowParamValueUpdates) { // ensure 500ms has passed since receiving MIDI values
     var args = arrayfromargs(args);
     if (args[0] === 'value') {
+      //post("PARAM_VAL", typeof(args[1]), args[1], "\n");
       param.val = args[1];
       updateMidiVal();
     }
+  }
+}
+
+function paramNameCallback(args) {
+  debug('PARAM_NAME_CALLBACK', args, "\n");
+  var args = arrayfromargs(args);
+  if (args[0] === 'name') {
+    param.name = args[1];
+    sendNames();
   }
 }
 
@@ -117,8 +150,10 @@ function checkDevicePresent() {
 
 function setPath(paramPath) {
   debug('SET_PATH', paramPath, "\n");
-  paramObj = new LiveAPI(valueCallback, paramPath);
+  paramObj = new LiveAPI(paramValueCallback, paramPath);
   paramObj.property = "value";
+  paramNameObj = new LiveAPI(paramNameCallback, paramPath);
+  paramNameObj.property = "name";
 
   param = {
     id: parseInt(paramObj.id),
@@ -172,29 +207,11 @@ function setPath(paramPath) {
   sendNames();
 }
 
-function setInitMapping(objId) {
-  debug("SEt_INIT_MAPPING\n");
-  initMappingId = objId;
-}
-
-function doInit() {
-  debug("DO_INIT\n");
-  //post("INIT_MAPPING=", initMappingId, "DONE=", initMappingDone, "\n");
-  init();
-  if (!initMappingDone) {
-    initMappingDone = true;
-    if (initMappingId > 0) {
-      //post("INIT_MAPPING_ID", initMappingId, "\n");
-      setPath(["id", initMappingId]);
-    }
-  }
-}
-
 function sendNames() {
   debug("SEND_NAMES\n");
-  outlet(OUTLET_PARAM_NAME, param.name || nullString);
-  outlet(OUTLET_DEVICE_NAME, param.deviceName || nullString);
-  outlet(OUTLET_TRACK_NAME, param.trackName || nullString);
+  outlet(OUTLET_PARAM_NAME,  (param.name       ? param.name.toString().replace(/^"|"$/g, '')       : nullString));
+  outlet(OUTLET_DEVICE_NAME, (param.deviceName ? param.deviceName.toString().replace(/^"|"$/g, '') : nullString));
+  outlet(OUTLET_TRACK_NAME,  (param.trackName  ? param.trackName.toString().replace(/^"|"$/g, '')  : nullString));
 }
 
 function updateMidiVal() {
