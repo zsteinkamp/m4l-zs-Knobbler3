@@ -1,13 +1,12 @@
 autowatch = 1;
-outlets = 7;
+outlets = 6;
 
 var OUTLET_MIDI = 0;
 var OUTLET_PARAM_NAME = 1;
 var OUTLET_DEVICE_NAME = 2;
 var OUTLET_TRACK_NAME = 3;
 var OUTLET_MAPPED = 4;
-var OUTLET_MAP_ID = 5;
-var OUTLET_MAP_PATH = 6;
+var OUTLET_MAP_PATH = 5;
 
 var paramObj = null;
 var paramNameObj = null;
@@ -28,23 +27,24 @@ var initMappingDone = false;
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
 
-var debugLog = true;
+var debugLog = false;
+var initMappingPath = null;
 
 post("zreloaded\n");
 
-function setInitMapping(objId) {
-  post("SET_INIT_MAPPING", objId, "\n");
-  initMappingId = parseInt(objId);
+function setInitMapping(path) {
+  debug("SET_INIT_MAPPING", path, "\n");
+  initMappingPath = path;
 }
 
 function doInit() {
-  post("INIT_MAPPING=", initMappingId, "DONE=", initMappingDone, "\n");
+  debug("INIT_MAPPING=", initMappingPath, "DONE=", initMappingDone, "\n");
   init();
   if (!initMappingDone) {
     initMappingDone = true;
-    if (initMappingId > 0) {
-      //post("INIT_MAPPING_ID", initMappingId, "\n");
-      setPath(["id", initMappingId]);
+    if (initMappingPath !== '') {
+      //post("INIT_MAPPING_PATH", initMappingPath, "\n");
+      setPath(initMappingPath);
     }
   }
 }
@@ -61,7 +61,6 @@ function init() {
   outlet(OUTLET_MIDI, 0);
   outlet(OUTLET_MAPPED, false);
   if (initMappingDone) {
-    outlet(OUTLET_MAP_ID, 0);
     outlet(OUTLET_MAP_PATH, '');
   }
   if (deviceCheckerTask !== null) {
@@ -196,7 +195,6 @@ function setPath(paramPath) {
 
   //post("PARAM DATA", JSON.stringify(param), "\n");
   outlet(OUTLET_MAPPED, true);
-  outlet(OUTLET_MAP_ID, param.id);
   outlet(OUTLET_MAP_PATH, param.path);
 
   // Defer outputting the new MIDI val because the controller
