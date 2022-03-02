@@ -1,5 +1,5 @@
 autowatch = 1;
-outlets = 6;
+outlets = 7;
 
 var OUTLET_MIDI = 0;
 var OUTLET_PARAM_NAME = 1;
@@ -7,6 +7,7 @@ var OUTLET_DEVICE_NAME = 2;
 var OUTLET_TRACK_NAME = 3;
 var OUTLET_MAPPED = 4;
 var OUTLET_MAP_ID = 5;
+var OUTLET_MAP_PATH = 6;
 
 var paramObj = null;
 var paramNameObj = null;
@@ -27,20 +28,17 @@ var initMappingDone = false;
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
 
-var debugLog = false;
+var debugLog = true;
 
-
-
-post("reloaded\n");
+post("zreloaded\n");
 
 function setInitMapping(objId) {
-  debug("SEt_INIT_MAPPING\n");
-  initMappingId = objId;
+  post("SET_INIT_MAPPING", objId, "\n");
+  initMappingId = parseInt(objId);
 }
 
 function doInit() {
-  debug("DO_INIT\n");
-  //post("INIT_MAPPING=", initMappingId, "DONE=", initMappingDone, "\n");
+  post("INIT_MAPPING=", initMappingId, "DONE=", initMappingDone, "\n");
   init();
   if (!initMappingDone) {
     initMappingDone = true;
@@ -64,6 +62,7 @@ function init() {
   outlet(OUTLET_MAPPED, false);
   if (initMappingDone) {
     outlet(OUTLET_MAP_ID, 0);
+    outlet(OUTLET_MAP_PATH, '');
   }
   if (deviceCheckerTask !== null) {
     deviceCheckerTask.cancel();
@@ -198,6 +197,7 @@ function setPath(paramPath) {
   //post("PARAM DATA", JSON.stringify(param), "\n");
   outlet(OUTLET_MAPPED, true);
   outlet(OUTLET_MAP_ID, param.id);
+  outlet(OUTLET_MAP_PATH, param.path);
 
   // Defer outputting the new MIDI val because the controller
   // will not process it since it was just sending other vals
@@ -208,7 +208,7 @@ function setPath(paramPath) {
 }
 
 function sendNames() {
-  debug("SEND_NAMES\n");
+  debug("SEND_NAMES", param.name, param.deviceName, param.trackName, "\n");
   outlet(OUTLET_PARAM_NAME,  (param.name       ? param.name.toString().replace(/^"|"$/g, '')       : nullString));
   outlet(OUTLET_DEVICE_NAME, (param.deviceName ? param.deviceName.toString().replace(/^"|"$/g, '') : nullString));
   outlet(OUTLET_TRACK_NAME,  (param.trackName  ? param.trackName.toString().replace(/^"|"$/g, '')  : nullString));
