@@ -13,6 +13,8 @@ var paramNameObj = null;
 var deviceObj = null;
 var trackObj = null;
 
+var instanceId = 'NULL';
+
 var param = {};
 var outMin;
 var outMax;
@@ -22,35 +24,66 @@ var nullString = "- - -";
 var allowMapping = true;
 var allowParamValueUpdates = true;
 var allowUpdateFromMidi = true;
-var initMappingDone = false;
 
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
 
-var debugLog = false;
+var debugLog = true;
 var initMappingPath = null;
+var pathListener = null;
 
-post("zreloaded\n");
+post("reloaded\n");
 
-function setInitMapping(path) {
-  debug("SET_INIT_MAPPING", path, "\n");
-  initMappingPath = path;
-}
-
-function doInit() {
-  debug("INIT_MAPPING=", initMappingPath, "DONE=", initMappingDone, "\n");
-  init();
-  if (!initMappingDone) {
-    initMappingDone = true;
-    if (initMappingPath !== '') {
-      //post("INIT_MAPPING_PATH", initMappingPath, "\n");
-      setPath(initMappingPath);
-    }
+function debug() {
+  if (debugLog) {
+    post("[", instanceId, "]", debug.caller.name, Array.prototype.slice.call(arguments).join(" "), "\n");
   }
 }
 
+function isValidPath(path) {
+  return typeof(path) === 'string' && path.match(/^live_set /);
+}
+
+function dequote(str) {
+  return str.replace(/^"|"$/g, '');
+}
+
+function setInstanceId(id) {
+  debug(id);
+  instanceId = parseInt(id);
+}
+
+function pathChangedCallback(data) {
+  debug("parameter value changed: " + data.name)
+  debug("new value: " + data.value)
+  setPath(data.value);
+}
+
+function doInit() {
+  debug();
+
+  if (instanceId) {
+    pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
+  } else {
+    post('ERROR: Instance ID not set.\n');
+  }
+
+  var currPathVal = pathListener.getvalue()
+
+  if (isValidPath(currPathVal)) {
+    setPath(currPathVal);
+  } else {
+    init();
+  }
+}
+
+function clearPath() {
+  debug();
+  init();
+}
+
 function init() {
-  debug("INIT\n");
+  debug("INIT");
   if (paramObj) {
     // clean up callbacks when unmapping
     paramObj.id = 0;
@@ -60,23 +93,17 @@ function init() {
   sendNames();
   outlet(OUTLET_MIDI, 0);
   outlet(OUTLET_MAPPED, false);
-  if (initMappingDone) {
-    outlet(OUTLET_MAP_PATH, '');
-  }
+
+  pathListener.setvalue_silent('');
+
   if (deviceCheckerTask !== null) {
     deviceCheckerTask.cancel();
     deviceCheckerTask = null;
   }
 }
 
-function debug() {
-  if (debugLog) {
-    post(Array.prototype.slice.call(arguments).join(" "));
-  }
-}
-
 function setMin(val) {
-  debug('MIN', val, "\n");
+  debug(val);
   outMin = parseFloat(val) / 100;
   if (param.val !== undefined) {
     updateMidiVal();
@@ -84,7 +111,7 @@ function setMin(val) {
 }
 
 function setMax(val) {
-  debug('MAX', val, "\n");
+  debug(val);
   outMax = parseFloat(val) / 100;
   if (param.val !== undefined) {
     updateMidiVal();
@@ -101,7 +128,7 @@ function paramValueCallback(args) {
   // We accomplish this by keeping a timestamp of the last time MIDI data was
   // received, and only taking action here if more than 500ms has passed.
 
-  debug('VALUE_CALLBACK', args, "ALLOW_UPDATES=", allowParamValueUpdates, "\n");
+  debug(args, "ALLOW_UPDATES=", allowParamValueUpdates);
   if (allowParamValueUpdates) { // ensure 500ms has passed since receiving MIDI values
     var args = arrayfromargs(args);
     if (args[0] === 'value') {
@@ -113,7 +140,7 @@ function paramValueCallback(args) {
 }
 
 function paramNameCallback(args) {
-  debug('PARAM_NAME_CALLBACK', args, "\n");
+  debug(args);
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.name = args[1];
@@ -122,7 +149,7 @@ function paramNameCallback(args) {
 }
 
 function deviceNameCallback(args) {
-  debug('DEVICE_NAME_CALLBACK', args, "\n");
+  debug(args);
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.deviceName = args[1];
@@ -131,7 +158,7 @@ function deviceNameCallback(args) {
 }
 
 function trackNameCallback(args) {
-  debug('TRACK_NAME_CALLBACK', args, "\n");
+  debug(args);
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.trackName = args[1];
@@ -147,7 +174,11 @@ function checkDevicePresent() {
 }
 
 function setPath(paramPath) {
-  debug('SET_PATH', paramPath, "\n");
+  debug(paramPath);
+  if (!isValidPath(paramPath)) {
+    debug('skipping', paramPath);
+    return;
+  }
   paramObj = new LiveAPI(paramValueCallback, paramPath);
   paramObj.property = "value";
   paramNameObj = new LiveAPI(paramNameCallback, paramPath);
@@ -187,7 +218,7 @@ function setPath(paramPath) {
     devicePath.match(/^live_set master_track/)
   );
   if (matches) {
-    debug("TRACK_PATH", matches[0], "\n");
+    debug(matches[0]);
     trackObj = new LiveAPI(trackNameCallback, matches[0]);
     trackObj.property = "name";
     param.trackName = trackObj.get("name");
@@ -195,25 +226,25 @@ function setPath(paramPath) {
 
   //post("PARAM DATA", JSON.stringify(param), "\n");
   outlet(OUTLET_MAPPED, true);
-  outlet(OUTLET_MAP_PATH, param.path);
+  pathListener.setvalue_silent(param.path);
+  //outlet(OUTLET_MAP_PATH, param.path);
 
   // Defer outputting the new MIDI val because the controller
   // will not process it since it was just sending other vals
   // that triggered the mapping.
   (new Task( function() { updateMidiVal(); } )).schedule(333);
-
   sendNames();
 }
 
 function sendNames() {
-  debug("SEND_NAMES", param.name, param.deviceName, param.trackName, "\n");
-  outlet(OUTLET_PARAM_NAME,  (param.name       ? param.name.toString().replace(/^"|"$/g, '')       : nullString));
-  outlet(OUTLET_DEVICE_NAME, (param.deviceName ? param.deviceName.toString().replace(/^"|"$/g, '') : nullString));
-  outlet(OUTLET_TRACK_NAME,  (param.trackName  ? param.trackName.toString().replace(/^"|"$/g, '')  : nullString));
+  debug(param.name, param.deviceName, param.trackName);
+  outlet(OUTLET_PARAM_NAME,  (param.name       ? dequote(param.name.toString())       : nullString));
+  outlet(OUTLET_DEVICE_NAME, (param.deviceName ? dequote(param.deviceName.toString()) : nullString));
+  outlet(OUTLET_TRACK_NAME,  (param.trackName  ? dequote(param.trackName.toString())  : nullString));
 }
 
 function updateMidiVal() {
-  debug("UPDATE_MIDI_VAL\n");
+  debug();
   // protect against divide-by-zero errors
   if (outMax === outMin) {
     if (outMax === 1) {
@@ -239,13 +270,8 @@ function updateMidiVal() {
   outlet(OUTLET_MIDI, midiVal);
 }
 
-function clearPath() {
-  debug("CLEARPATH", "\n");
-  init();
-}
-
 function midiVal(midiVal) {
-  debug("MIDIVAL", paramObj, "\n");
+  debug(midiVal);
   if (paramObj) {
     if (allowUpdateFromMidi) {
       //post('INVAL', midiVal, 'OUTMIN', outMin, 'OUTMAX', outMax, '\n');
@@ -267,7 +293,7 @@ function midiVal(midiVal) {
       paramObj.set("value", param.val);
     }
   } else {
-    debug("GONNA_MAP", "ALLOWED=", allowMapping, "\n");
+    debug("GONNA_MAP", "ALLOWED=", allowMapping);
     // If we get a MIDI CC but are unassigned, trigger a mapping.
     // This removes a step from typical mapping.
     if (allowMapping) {
