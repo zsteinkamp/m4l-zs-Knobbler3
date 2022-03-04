@@ -1,12 +1,11 @@
 autowatch = 1;
-outlets = 6;
+outlets = 5;
 
 var OUTLET_MIDI = 0;
 var OUTLET_PARAM_NAME = 1;
 var OUTLET_DEVICE_NAME = 2;
 var OUTLET_TRACK_NAME = 3;
 var OUTLET_MAPPED = 4;
-var OUTLET_MAP_PATH = 5;
 
 var paramObj = null;
 var paramNameObj = null;
@@ -28,7 +27,7 @@ var allowUpdateFromMidi = true;
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
 
-var debugLog = true;
+var debugLog = false;
 var initMappingPath = null;
 var pathListener = null;
 
@@ -59,15 +58,25 @@ function pathChangedCallback(data) {
   setPath(data.value);
 }
 
+function setupPathListenerIfNecessary() {
+  if (!pathListener) {
+    if (instanceId) {
+      pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
+    } else {
+      post('ERROR: Instance ID not set.\n');
+    }
+  }
+}
+
+function setPathParam(path) {
+  setupPathListenerIfNecessary();
+  pathListener.setvalue_silent(path);
+}
+
 function doInit() {
   debug();
 
-  if (instanceId) {
-    pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
-  } else {
-    post('ERROR: Instance ID not set.\n');
-  }
-
+  setupPathListenerIfNecessary();
   var currPathVal = pathListener.getvalue()
 
   if (isValidPath(currPathVal)) {
@@ -94,7 +103,7 @@ function init() {
   outlet(OUTLET_MIDI, 0);
   outlet(OUTLET_MAPPED, false);
 
-  pathListener.setvalue_silent('');
+  setPathParam('');
 
   if (deviceCheckerTask !== null) {
     deviceCheckerTask.cancel();
@@ -226,8 +235,7 @@ function setPath(paramPath) {
 
   //post("PARAM DATA", JSON.stringify(param), "\n");
   outlet(OUTLET_MAPPED, true);
-  pathListener.setvalue_silent(param.path);
-  //outlet(OUTLET_MAP_PATH, param.path);
+  setPathParam(param.path);
 
   // Defer outputting the new MIDI val because the controller
   // will not process it since it was just sending other vals
