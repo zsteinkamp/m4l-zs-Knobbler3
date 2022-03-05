@@ -201,6 +201,7 @@ function setPath(paramPath) {
     max: parseFloat(paramObj.get("max")) || 1,
     name: paramObj.get("name"),
   };
+  debug('SET PARAM', JSON.stringify(param));
 
   deviceObj = new LiveAPI(deviceNameCallback, paramObj.get("canonical_parent"));
 
@@ -265,15 +266,19 @@ function updateMidiVal() {
   // the value, expressed as a proportion between the param min and max
   var valProp = (param.val - param.min) / (param.max - param.min);
 
+  debug("VALPROP", valProp, "OUTMINMAX", outMin, outMax);
+
   // scale the param proportion value to the output min/max proportion
   var scaledValProp = ((valProp - outMin) / (outMax - outMin));
 
   scaledValProp = Math.min(scaledValProp, 1);
   scaledValProp = Math.max(scaledValProp, 0);
 
+  debug("SCALEDVALPROP", scaledValProp);
+
   //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
   var midiVal = parseInt(127 * scaledValProp);
-  //post("MIDIVAL", midiVal, "\n");
+  debug("MIDIVAL", midiVal, "\n");
 
   outlet(OUTLET_MIDI, midiVal);
 }
@@ -286,6 +291,8 @@ function midiVal(midiVal) {
       var propMidiVal = midiVal / 127;
       var scaledMidiVal = ((outMax - outMin) * propMidiVal) + outMin;
       param.val = ((param.max - param.min) * scaledMidiVal) + param.min;
+
+      debug('VALS', JSON.stringify({ param_max: param.max, param_min: param.min, scaledMidiVal: scaledMidiVal, propMidiVal: propMidiVal }));
 
       // prevent updates from params directly being sent to MIDI for 500ms
       if (allowParamValueUpdates) {
