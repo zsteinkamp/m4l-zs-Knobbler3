@@ -24,6 +24,10 @@ If you would prefer to unmap in the computer, you can click the "x" next to the 
 
 If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there.
 
+### Changelog
+
+* [1.0.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.0.amxd) - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
+
 ### iPad MIDI Setup
 
 You can use Wifi or USB to connect the computer to your iPad. Configure the Network Session MIDI connection on your Mac in the Audio MIDI Setup application (in Applications/Utilities), and connect to your iPad. Make sure you are viewing the MIDI Studio, click the little globe in that window, click the iPad, then click the "Connect" button underneath.
@@ -47,10 +51,6 @@ The zs Knobbler3 device needs to be in a MIDI track whose input and output are t
 ### iPad TouchOSC Host/Port Setup
 
 The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names to TouchOSC running on the iPad. It uses service auto-discovery (zeroconf) to know what OSC devices are on the network. The dropdown list should contain your iPad. If not, you can edit the Host and Port boxes manually.
-
-## Changelog
-
-* 1.0.0 - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
 
 ## Common Problems
 
