@@ -22,7 +22,7 @@ If you would prefer to unmap in the computer, you can click the "x" next to the 
 
 ## Installation / Setup
 
-Clone this repo or download the files in the repo to your computer.
+If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there.
 
 ### iPad MIDI Setup
 
@@ -34,7 +34,7 @@ This will set up the iPad to use the MIDI interface called `Network (Session 1)`
 
 ### Ableton Live MIDI Setup
 
-You will need to configure Ableton Live to use Network (Session 1) for "Track" (not Remote) use. See the screenshot below. Chances are you will have other MIDI devices in that list, so make sure you set up both the `In:` and `Out:` items.
+You will need to configure Ableton Live to use Network (Session 1) for "Track" use (it's OK to also select Remote). See the screenshot below. Chances are you will have other MIDI devices in that list, so make sure you set up both the `In:` and `Out:` items.
 
 ![MIDI Port Setup in Ableton Live](images/midi_setup.png)
 
@@ -46,11 +46,11 @@ The zs Knobbler3 device needs to be in a MIDI track whose input and output are t
 
 ### iPad TouchOSC Host/Port Setup
 
-The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names to TouchOSC running on the iPad. In order to do this, it needs to know the host and  port that TouchOsc will be listening on the iPad. Chances are you can leave the port as-is, but use either the IP address of your iPad, or `{name}.local`. The default value is `ipad.local`.
+The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names to TouchOSC running on the iPad. It uses service auto-discovery (zeroconf) to know what OSC devices are on the network. The dropdown list should contain your iPad. If not, you can edit the Host and Port boxes manually.
 
-If everything works except names, that is a good sign that the host is not set correctly.
+## Changelog
 
-![Device Host/Port Configuration](images/host_port.png)
+* 1.0.0 - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
 
 ## Common Problems
 
