@@ -31,13 +31,13 @@ var debugLog = false;
 var initMappingPath = null;
 var pathListener = null;
 
-post("reloaded\n");
-
 function debug() {
   if (debugLog) {
     post("[", instanceId, "]", debug.caller.name, Array.prototype.slice.call(arguments).join(" "), "\n");
   }
 }
+
+debug("reloaded\n");
 
 function isValidPath(path) {
   return typeof(path) === 'string' && path.match(/^live_set /);
