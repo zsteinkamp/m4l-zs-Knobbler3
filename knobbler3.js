@@ -78,6 +78,7 @@ function doInit() {
 
   setupPathListenerIfNecessary();
   var currPathVal = pathListener.getvalue()
+  debug('INITIALLLLL === ', currPathVal);
 
   if (isValidPath(currPathVal)) {
     setPath(currPathVal);
@@ -144,6 +145,8 @@ function paramValueCallback(args) {
       //post("PARAM_VAL", typeof(args[1]), args[1], "\n");
       param.val = args[1];
       updateMidiVal();
+    } else {
+      debug('SUMPIN ELSE', args[0], args[1]);
     }
   }
 }
@@ -176,11 +179,21 @@ function trackNameCallback(args) {
 }
 
 function checkDevicePresent() {
+  debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
   if (!deviceObj.unquotedpath) {
     debug('DEVICE DELETED');
     init();
+    return;
+  }
+
+  // check if path has changed (e.g. inserting a track above this one)
+  if (paramObj.unquotedpath !== param.path) {
+    debug('path is different  NEW=', paramObj.unquotedpath, '  OLD=', param.path);
+    pathListener.setvalue_silent(paramObj.unquotedpath);
+    param.path = paramObj.unquotedpath;
   }
 }
+
 
 function setPath(paramPath) {
   debug(paramPath);
