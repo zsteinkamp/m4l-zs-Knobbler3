@@ -1,11 +1,19 @@
 autowatch = 1;
 outlets = 5;
 
+var debugLog = false;
+
 var OUTLET_MIDI = 0;
 var OUTLET_PARAM_NAME = 1;
 var OUTLET_DEVICE_NAME = 2;
 var OUTLET_TRACK_NAME = 3;
 var OUTLET_MAPPED = 4;
+
+setoutletassist(OUTLET_MIDI, 'MIDI CC Value');
+setoutletassist(OUTLET_PARAM_NAME, 'Param Name (string)');
+setoutletassist(OUTLET_DEVICE_NAME, 'Device Name (string)');
+setoutletassist(OUTLET_TRACK_NAME, 'Track Name (string)');
+setoutletassist(OUTLET_MAPPED, 'Is Mapped (boolean)');
 
 var paramObj = null;
 var paramNameObj = null;
@@ -27,17 +35,16 @@ var allowUpdateFromMidi = true;
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
 
-var debugLog = false;
 var initMappingPath = null;
 var pathListener = null;
 
 function debug() {
   if (debugLog) {
-    post("[", instanceId, "]", debug.caller.name, Array.prototype.slice.call(arguments).join(" "), "\n");
+    post("[", instanceId, "]", debug.caller ? debug.caller.name : 'ROOT', Array.prototype.slice.call(arguments).join(" "), "\n");
   }
 }
 
-debug("reloaded\n");
+debug("reloaded");
 
 function isValidPath(path) {
   return typeof(path) === 'string' && path.match(/^live_set /);
@@ -78,7 +85,7 @@ function doInit() {
 
   setupPathListenerIfNecessary();
   var currPathVal = pathListener.getvalue()
-  debug('INITIALLLLL === ', currPathVal);
+  debug('currPathVal=', currPathVal);
 
   if (isValidPath(currPathVal)) {
     setPath(currPathVal);
@@ -115,17 +122,13 @@ function init() {
 function setMin(val) {
   debug(val);
   outMin = parseFloat(val) / 100;
-  if (param.val !== undefined) {
-    updateMidiVal();
-  }
+  updateMidiVal();
 }
 
 function setMax(val) {
   debug(val);
   outMax = parseFloat(val) / 100;
-  if (param.val !== undefined) {
-    updateMidiVal();
-  }
+  updateMidiVal();
 }
 
 function paramValueCallback(args) {
@@ -156,7 +159,7 @@ function paramNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.name = args[1];
-    sendNames();
+    outlet(OUTLET_PARAM_NAME,  (param.name       ? dequote(param.name.toString())       : nullString));
   }
 }
 
@@ -165,7 +168,7 @@ function deviceNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.deviceName = args[1];
-    sendNames();
+    outlet(OUTLET_DEVICE_NAME, (param.deviceName ? dequote(param.deviceName.toString()) : nullString));
   }
 }
 
@@ -174,12 +177,12 @@ function trackNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.trackName = args[1];
-    sendNames();
+    outlet(OUTLET_TRACK_NAME,  (param.trackName  ? dequote(param.trackName.toString())  : nullString));
   }
 }
 
 function checkDevicePresent() {
-  debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
+  //debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
   if (!deviceObj.unquotedpath) {
     debug('DEVICE DELETED');
     init();
@@ -276,28 +279,30 @@ function updateMidiVal() {
     }
   }
 
-  // the value, expressed as a proportion between the param min and max
-  var valProp = (param.val - param.min) / (param.max - param.min);
+  if (param.val !== undefined && param.max !== undefined && param.min !== undefined) {
+    // the value, expressed as a proportion between the param min and max
+    var valProp = (param.val - param.min) / (param.max - param.min);
 
-  debug("VALPROP", valProp, "OUTMINMAX", outMin, outMax);
+    debug("VALPROP", valProp, JSON.stringify(param), "OUTMINMAX", outMin, outMax);
 
-  // scale the param proportion value to the output min/max proportion
-  var scaledValProp = ((valProp - outMin) / (outMax - outMin));
+    // scale the param proportion value to the output min/max proportion
+    var scaledValProp = ((valProp - outMin) / (outMax - outMin));
 
-  scaledValProp = Math.min(scaledValProp, 1);
-  scaledValProp = Math.max(scaledValProp, 0);
+    scaledValProp = Math.min(scaledValProp, 1);
+    scaledValProp = Math.max(scaledValProp, 0);
 
-  debug("SCALEDVALPROP", scaledValProp);
+    debug("SCALEDVALPROP", scaledValProp);
 
-  //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
-  var midiVal = parseInt(127 * scaledValProp);
-  debug("MIDIVAL", midiVal, "\n");
+    //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
+    var midiVal = parseInt(127 * scaledValProp);
+    debug("MIDIVAL", midiVal);
 
-  outlet(OUTLET_MIDI, midiVal);
+    outlet(OUTLET_MIDI, midiVal);
+  }
 }
 
 function midiVal(midiVal) {
-  debug(midiVal);
+  //debug(midiVal);
   if (paramObj) {
     if (allowUpdateFromMidi) {
       //post('INVAL', midiVal, 'OUTMIN', outMin, 'OUTMAX', outMax, '\n');
@@ -305,7 +310,7 @@ function midiVal(midiVal) {
       var scaledMidiVal = ((outMax - outMin) * propMidiVal) + outMin;
       param.val = ((param.max - param.min) * scaledMidiVal) + param.min;
 
-      debug('VALS', JSON.stringify({ param_max: param.max, param_min: param.min, scaledMidiVal: scaledMidiVal, propMidiVal: propMidiVal }));
+      //debug('VALS', JSON.stringify({ param_max: param.max, param_min: param.min, scaledMidiVal: scaledMidiVal, propMidiVal: propMidiVal }));
 
       // prevent updates from params directly being sent to MIDI for 500ms
       if (allowParamValueUpdates) {
