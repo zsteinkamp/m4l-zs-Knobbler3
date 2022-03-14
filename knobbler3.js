@@ -3,13 +3,13 @@ outlets = 5;
 
 var debugLog = false;
 
-var OUTLET_MIDI = 0;
+var OUTLET_OSC = 0;
 var OUTLET_PARAM_NAME = 1;
 var OUTLET_DEVICE_NAME = 2;
 var OUTLET_TRACK_NAME = 3;
 var OUTLET_MAPPED = 4;
 
-setoutletassist(OUTLET_MIDI, 'MIDI CC Value');
+setoutletassist(OUTLET_OSC, 'OSC Messages');
 setoutletassist(OUTLET_PARAM_NAME, 'Param Name (string)');
 setoutletassist(OUTLET_DEVICE_NAME, 'Device Name (string)');
 setoutletassist(OUTLET_TRACK_NAME, 'Track Name (string)');
@@ -30,7 +30,7 @@ var nullString = "- - -";
 
 var allowMapping = true;
 var allowParamValueUpdates = true;
-var allowUpdateFromMidi = true;
+var allowUpdateFromOsc = true;
 
 var deviceCheckerTask = null;
 var allowParamValueUpdatesTask = null;
@@ -108,7 +108,7 @@ function init() {
   paramObj = null;
   param = {};
   sendNames();
-  outlet(OUTLET_MIDI, 0);
+  sendVal();
   outlet(OUTLET_MAPPED, false);
 
   setPathParam('');
@@ -122,32 +122,32 @@ function init() {
 function setMin(val) {
   debug(val);
   outMin = parseFloat(val) / 100;
-  updateMidiVal();
+  sendVal();
 }
 
 function setMax(val) {
   debug(val);
   outMax = parseFloat(val) / 100;
-  updateMidiVal();
+  sendVal();
 }
 
 function paramValueCallback(args) {
   // This function is called whenever the parameter value changes,
-  // either via mapped MIDI control or by changing the device directly.
+  // either via OSC control or by changing the device directly.
   // We need to distinguish between the two and not do anything if the
-  // value was changed due to MIDI input. Otherwise, since we would create a feedback
+  // value was changed due to OSC input. Otherwise, since we would create a feedback
   // loop since this the purpose of this function is to update the displayed
-  // value on the MIDI controller to show automation or direct manipulation.
-  // We accomplish this by keeping a timestamp of the last time MIDI data was
+  // value on the OSC controller to show automation or direct manipulation.
+  // We accomplish this by keeping a timestamp of the last time OSC data was
   // received, and only taking action here if more than 500ms has passed.
 
   debug(args, "ALLOW_UPDATES=", allowParamValueUpdates);
-  if (allowParamValueUpdates) { // ensure 500ms has passed since receiving MIDI values
+  if (allowParamValueUpdates) { // ensure 500ms has passed since receiving a value
     var args = arrayfromargs(args);
     if (args[0] === 'value') {
       //post("PARAM_VAL", typeof(args[1]), args[1], "\n");
       param.val = args[1];
-      updateMidiVal();
+      sendVal();
     } else {
       debug('SUMPIN ELSE', args[0], args[1]);
     }
@@ -159,7 +159,7 @@ function paramNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.name = args[1];
-    outlet(OUTLET_PARAM_NAME,  (param.name       ? dequote(param.name.toString())       : nullString));
+    sendParamName();
   }
 }
 
@@ -168,7 +168,7 @@ function deviceNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.deviceName = args[1];
-    outlet(OUTLET_DEVICE_NAME, (param.deviceName ? dequote(param.deviceName.toString()) : nullString));
+    sendDeviceName();
   }
 }
 
@@ -177,7 +177,7 @@ function trackNameCallback(args) {
   var args = arrayfromargs(args);
   if (args[0] === 'name') {
     param.trackName = args[1];
-    outlet(OUTLET_TRACK_NAME,  (param.trackName  ? dequote(param.trackName.toString())  : nullString));
+    sendTrackName();
   }
 }
 
@@ -254,21 +254,37 @@ function setPath(paramPath) {
   outlet(OUTLET_MAPPED, true);
   setPathParam(param.path);
 
-  // Defer outputting the new MIDI val because the controller
+  // Defer outputting the new param val because the controller
   // will not process it since it was just sending other vals
   // that triggered the mapping.
-  (new Task( function() { updateMidiVal(); } )).schedule(333);
+  (new Task( function() { sendVal(); } )).schedule(333);
   sendNames();
 }
 
 function sendNames() {
   debug(param.name, param.deviceName, param.trackName);
-  outlet(OUTLET_PARAM_NAME,  (param.name       ? dequote(param.name.toString())       : nullString));
-  outlet(OUTLET_DEVICE_NAME, (param.deviceName ? dequote(param.deviceName.toString()) : nullString));
-  outlet(OUTLET_TRACK_NAME,  (param.trackName  ? dequote(param.trackName.toString())  : nullString));
+  sendParamName();
+  sendDeviceName();
+  sendTrackName();
 }
 
-function updateMidiVal() {
+function sendParamName() {
+  var paramName = param.name ? dequote(param.name.toString()) : nullString;
+  outlet(OUTLET_PARAM_NAME, paramName);
+  outlet(OUTLET_OSC, ['/param' + instanceId, paramName]);
+}
+function sendDeviceName() {
+  var deviceName = param.deviceName ? dequote(param.deviceName.toString()) : nullString;
+  outlet(OUTLET_DEVICE_NAME, deviceName);
+  outlet(OUTLET_OSC, ['/device' + instanceId, deviceName]);
+}
+function sendTrackName() {
+  var trackName = param.trackName ? dequote(param.trackName.toString()) : nullString;
+  outlet(OUTLET_TRACK_NAME, trackName);
+  outlet(OUTLET_OSC, ['/track' + instanceId, trackName]);
+}
+
+function sendVal() {
   debug();
   // protect against divide-by-zero errors
   if (outMax === outMin) {
@@ -279,40 +295,39 @@ function updateMidiVal() {
     }
   }
 
-  if (param.val !== undefined && param.max !== undefined && param.min !== undefined) {
-    // the value, expressed as a proportion between the param min and max
-    var valProp = (param.val - param.min) / (param.max - param.min);
-
-    debug("VALPROP", valProp, JSON.stringify(param), "OUTMINMAX", outMin, outMax);
-
-    // scale the param proportion value to the output min/max proportion
-    var scaledValProp = ((valProp - outMin) / (outMax - outMin));
-
-    scaledValProp = Math.min(scaledValProp, 1);
-    scaledValProp = Math.max(scaledValProp, 0);
-
-    debug("SCALEDVALPROP", scaledValProp);
-
-    //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
-    var midiVal = parseInt(127 * scaledValProp);
-    debug("MIDIVAL", midiVal);
-
-    outlet(OUTLET_MIDI, midiVal);
+  if (param.val === undefined || param.max === undefined || param.min === undefined) {
+    outlet(OUTLET_OSC, ['/val' + instanceId, 0]);
+    return;
   }
+
+  // the value, expressed as a proportion between the param min and max
+  var valProp = (param.val - param.min) / (param.max - param.min);
+
+  debug("VALPROP", valProp, JSON.stringify(param), "OUTMINMAX", outMin, outMax);
+
+  // scale the param proportion value to the output min/max proportion
+  var scaledValProp = ((valProp - outMin) / (outMax - outMin));
+
+  scaledValProp = Math.min(scaledValProp, 1);
+  scaledValProp = Math.max(scaledValProp, 0);
+
+  debug("SCALEDVALPROP", scaledValProp);
+
+  //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
+  outlet(OUTLET_OSC, ['/val' + instanceId, scaledValProp]);
 }
 
-function midiVal(midiVal) {
-  //debug(midiVal);
+function receiveVal(val) {
+  //debug(val);
   if (paramObj) {
-    if (allowUpdateFromMidi) {
-      //post('INVAL', midiVal, 'OUTMIN', outMin, 'OUTMAX', outMax, '\n');
-      var propMidiVal = midiVal / 127;
-      var scaledMidiVal = ((outMax - outMin) * propMidiVal) + outMin;
-      param.val = ((param.max - param.min) * scaledMidiVal) + param.min;
+    if (allowUpdateFromOsc) {
+      //post('INVAL', val, 'OUTMIN', outMin, 'OUTMAX', outMax, '\n');
+      var scaledVal = ((outMax - outMin) * val) + outMin;
+      param.val = ((param.max - param.min) * scaledVal) + param.min;
 
-      //debug('VALS', JSON.stringify({ param_max: param.max, param_min: param.min, scaledMidiVal: scaledMidiVal, propMidiVal: propMidiVal }));
+      //debug('VALS', JSON.stringify({ param_max: param.max, param_min: param.min, scaledVal: scaledVal, val: val }));
 
-      // prevent updates from params directly being sent to MIDI for 500ms
+      // prevent updates from params directly being sent to OSC for 500ms
       if (allowParamValueUpdates) {
         allowParamValueUpdates = false;
         if (allowParamValueUpdatesTask !== null) {
@@ -327,17 +342,17 @@ function midiVal(midiVal) {
     }
   } else {
     debug("GONNA_MAP", "ALLOWED=", allowMapping);
-    // If we get a MIDI CC but are unassigned, trigger a mapping.
+    // If we get a OSC value but are unassigned, trigger a mapping.
     // This removes a step from typical mapping.
     if (allowMapping) {
       // debounce mapping, since moving the CC will trigger many message
       allowMapping = false;
       (new Task( function() { allowMapping = true; } )).schedule(1000);
 
-      // wait 500ms before paying attention to MIDI values again after mapping
-      if (allowUpdateFromMidi) {
-        allowUpdateFromMidi = false;
-        (new Task( function() { allowUpdateFromMidi = true; } )).schedule(500);
+      // wait 500ms before paying attention to values again after mapping
+      if (allowUpdateFromOsc) {
+        allowUpdateFromOsc = false;
+        (new Task( function() { allowUpdateFromOsc = true; } )).schedule(500);
       }
 
       //post("PRE-SELOBJ\n");
