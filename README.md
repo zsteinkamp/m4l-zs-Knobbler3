@@ -3,6 +3,8 @@
 
 This is a Max For Live device and a TouchOSC layout that provides a control surface that auto-labels parameter controls when a parameter is mapped, and minimizes the steps required to map controls.
 
+![iPad Interface](images/ipadInterface.jpg)
+
 The problem with in-the-box musicmaking is that the best control surfaces like the Push 2 are modal, requiring you to navigate menus to find parameters, and non-modal surfaces like the BCR-2000 require you to either remember knob assignments or write them on the device itself. This poses a barrier to switching between projects, or simply remembering knob assignments from day-to-day.
 
 With the zs-Knobbler3, you get 32 auto-labeling fader controls, 10 MIDI faders, and 8 MIDI buttons. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name of the mapped parameter.
@@ -33,13 +35,17 @@ If you just want to download and install the device, then go to the [frozen/](ht
 
 ### TouchOSC (iPad) to Computer Connection
 
-You will need to configure TouchOSC to send OSC to your computer. zs-Knobbler3 advertises itself on your network, so you should be able to open TouchOSC's Connections config (the chain icon), Tap OSC, then in Connection 1, tap Browse. You should see zs Knobbler3 in the dropdown list. Tap it, and then tap the IPv4 address (e.g. 192.168.x.x:2346) in the flyout menu.
+You will need to configure TouchOSC to send OSC to your computer. zs-Knobbler3 advertises itself on your network, so you should be able to open TouchOSC's Connections config (the chain icon), Tap OSC, then in Connection 1, tap Browse (1). You should see zs Knobbler3 in the dropdown list (2). Tap it, and then tap the IPv4 address (e.g. 192.168.x.x:2346) in the flyout menu (3).
+
+![TouchOSC OSC Setup](images/iPadOscSetup.png)
 
 NOTE: Max/MSP and Max For Live are limited to only working with IPv4 addresses. If you pick an IPv6 address (e.g. `[fe80:xxxx:xxxx:xxxx:xxxx%en0]:2346`) it will not work.
 
 ### Computer to TouchOSC (iPad) Connection
 
 The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names and values to TouchOSC running on the iPad. It uses service auto-discovery (zeroconf) to know what OSC devices are on the network. The dropdown list should contain your iPad. If not, you can edit the Host and Port boxes manually.
+
+![Auto-Discovery Dropdown](images/autoDiscovery.png)
 
 ## Common Problems
 
