@@ -195,7 +195,7 @@ function checkDevicePresent() {
   }
 
   // check if path has changed (e.g. inserting a track above this one)
-  if (paramObj.unquotedpath !== param.path) {
+  if (paramObj && paramObj.unquotedpath !== param.path) {
     debug('path is different  NEW=', paramObj.unquotedpath, '  OLD=', param.path);
     pathListener.setvalue_silent(paramObj.unquotedpath);
     param.path = paramObj.unquotedpath;
@@ -274,19 +274,20 @@ function sendNames() {
 }
 
 function sendParamName() {
-  if (!instanceIdIsValid()) { return; }
+  debug();
+  if (!instanceIdIsValid()) { debug("invalid instanceId"); return; }
   var paramName = param.name ? dequote(param.name.toString()) : nullString;
   outlet(OUTLET_PARAM_NAME, paramName);
   outlet(OUTLET_OSC, ['/param' + instanceId, paramName]);
 }
 function sendDeviceName() {
-  if (!instanceIdIsValid()) { return; }
+  if (!instanceIdIsValid()) { debug("invalid instanceId"); return; }
   var deviceName = param.deviceName ? dequote(param.deviceName.toString()) : nullString;
   outlet(OUTLET_DEVICE_NAME, deviceName);
   outlet(OUTLET_OSC, ['/device' + instanceId, deviceName]);
 }
 function sendTrackName() {
-  if (!instanceIdIsValid()) { return; }
+  if (!instanceIdIsValid()) { debug("invalid instanceId"); return; }
   var trackName = param.trackName ? dequote(param.trackName.toString()) : nullString;
   outlet(OUTLET_TRACK_NAME, trackName);
   outlet(OUTLET_OSC, ['/track' + instanceId, trackName]);
