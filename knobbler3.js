@@ -65,13 +65,14 @@ function pathChangedCallback(data) {
   setPath(data.value);
 }
 
+function instanceIdIsValid() {
+  return instanceId && instanceId !== 'NULL';
+}
+
 function setupPathListenerIfNecessary() {
+  if (!instanceIdIsValid()) { return; }
   if (!pathListener) {
-    if (instanceId) {
-      pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
-    } else {
-      post('ERROR: Instance ID not set.\n');
-    }
+    pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
   }
 }
 
@@ -106,7 +107,11 @@ function init() {
     paramObj.id = 0;
   }
   paramObj = null;
-  param = {};
+  param = {
+    val: 0,
+    min: 0,
+    max: 100
+  };
   sendNames();
   sendVal();
   outlet(OUTLET_MAPPED, false);
@@ -269,22 +274,26 @@ function sendNames() {
 }
 
 function sendParamName() {
+  if (!instanceIdIsValid()) { return; }
   var paramName = param.name ? dequote(param.name.toString()) : nullString;
   outlet(OUTLET_PARAM_NAME, paramName);
   outlet(OUTLET_OSC, ['/param' + instanceId, paramName]);
 }
 function sendDeviceName() {
+  if (!instanceIdIsValid()) { return; }
   var deviceName = param.deviceName ? dequote(param.deviceName.toString()) : nullString;
   outlet(OUTLET_DEVICE_NAME, deviceName);
   outlet(OUTLET_OSC, ['/device' + instanceId, deviceName]);
 }
 function sendTrackName() {
+  if (!instanceIdIsValid()) { return; }
   var trackName = param.trackName ? dequote(param.trackName.toString()) : nullString;
   outlet(OUTLET_TRACK_NAME, trackName);
   outlet(OUTLET_OSC, ['/track' + instanceId, trackName]);
 }
 
 function sendVal() {
+  if (!instanceIdIsValid()) { return; }
   debug();
   // protect against divide-by-zero errors
   if (outMax === outMin) {
@@ -311,9 +320,8 @@ function sendVal() {
   scaledValProp = Math.min(scaledValProp, 1);
   scaledValProp = Math.max(scaledValProp, 0);
 
-  debug("SCALEDVALPROP", scaledValProp);
+  debug("SCALEDVALPROP", '/val' + instanceId, scaledValProp);
 
-  //post("PROP", valProp, scaledValProp, 127 * scaledValProp, outMin, outMax, "\n");
   outlet(OUTLET_OSC, ['/val' + instanceId, scaledValProp]);
 }
 
