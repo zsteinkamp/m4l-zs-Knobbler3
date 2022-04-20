@@ -266,6 +266,11 @@ function setPath(paramPath) {
   sendNames();
 }
 
+function refresh() {
+  sendNames();
+  sendVal();
+}
+
 function sendNames() {
   debug(param.name, param.deviceName, param.trackName);
   sendParamName();
@@ -295,7 +300,7 @@ function sendTrackName() {
 
 function sendVal() {
   if (!instanceIdIsValid()) { return; }
-  debug();
+  //debug();
   // protect against divide-by-zero errors
   if (outMax === outMin) {
     if (outMax === 1) {
