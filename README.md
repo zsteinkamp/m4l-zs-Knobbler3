@@ -27,6 +27,8 @@ If you would prefer to unmap in the computer, you can click the "x" next to the 
 
 If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there.
 
+If you want to use the non-frozen device (e.g. to do your own development) you will need to install the `zero.*` package. To do this, open the Package Manager in Max, then search for 'zero'. The package to install is called `zero` and it is published by Cycling '74.
+
 ### Changelog
 
 * [1.1.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.0.amxd) - 2022-03-13 - Go all-in on OSC, no more MIDI. Much simpler, faster, and better.
