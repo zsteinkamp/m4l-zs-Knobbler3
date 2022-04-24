@@ -7,14 +7,13 @@ var origInputs = {};
 var lo;
 
 function updateTrackDisplay(track) {
-  post("TD: " + track.info + "\n");
   //if (track.get('is_foldable')[0] === 1) {
-  var currentInput = JSON.parse(track.get('input_routing_type')).input_routing_type;
   var airt = JSON.parse(track.get('available_input_routing_types')).available_input_routing_types;
   if (!airt) {
     outlet(0, ['/toggleInput', 0]);
     return;
   }
+  var currentInput = JSON.parse(track.get('input_routing_type')).input_routing_type;
 
   var noInput = airt[airt.length - 1]; // "No Input" is the last available input routing type
 
@@ -50,12 +49,12 @@ function init() {
 
 function toggle() {
   var liveObject = new LiveAPI('live_set view selected_track');
-  var currentInput = JSON.parse(liveObject.get('input_routing_type')).input_routing_type;
   var airt = JSON.parse(liveObject.get('available_input_routing_types')).available_input_routing_types;
   if (!airt) {
     outlet(0, ['/toggleInput', 0]);
     return;
   }
+  var currentInput = JSON.parse(liveObject.get('input_routing_type')).input_routing_type;
 
   var ret;
   var noInput = airt[airt.length - 1]; // "No Input" is the last available input routing type
