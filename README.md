@@ -11,6 +11,8 @@ With the zs-Knobbler3, you get 32 auto-labeling fader controls, 10 MIDI faders, 
 
 The mappings are saved with your Live Set, so you can switch between sets and your mappings (and labels!) are preserved.
 
+It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow.
+
 ## Installation / Setup
 
 If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there.
@@ -19,7 +21,7 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 
 ### Changelog
 
-* [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate CurrentParamKnob functionality into this device and the TouchOSC layout.
+* [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
 * [1.1.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.0.amxd) - 2022-03-13 - Go all-in on OSC, no more MIDI. Much simpler, faster, and better.
 * [1.0.1](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.1.amxd) - 2022-03-09 - More confidence in fixing path saving problem.
 * [1.0.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.0.amxd) - 2022-03-09 - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
@@ -49,6 +51,10 @@ NOTE: Max/MSP and Max For Live are limited to only working with IPv4 addresses. 
 The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names and values to TouchOSC running on the iPad. It uses service auto-discovery (zeroconf) to know what OSC devices are on the network. The dropdown list should contain your iPad. If not, you can edit the Host and Port boxes manually.
 
 ![Auto-Discovery Dropdown](images/autoDiscovery.png)
+
+### CurrentParam and ToggleInput Functionality
+
+The TouchOSC layout includes two additional controls at the bottom of the screen. The wide teal slider always shows the value of the currently selected parameter in your live set. This gives you use a very high-resolution way to control parameter values that does not require you to use the mouse. The yellow/orange button is a way to toggle whether input is enabled on the current track. This lets you overdub automation easily without messing up any recorded MIDI or audio clips.
 
 ## Common Problems
 
