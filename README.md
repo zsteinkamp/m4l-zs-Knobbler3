@@ -21,6 +21,7 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 
 ### Changelog
 
+* [1.1.4](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.4.amxd) - 2022-10-08 - Fix a bug where choosing a different host from the dropdown would not update the OSC/UDP host or port destination.
 * [1.1.3](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.3.amxd) - 2022-09-08 - Fix bug with auto-discovery that prevented the iPad hostname from being set properly.
 * [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
 * [1.1.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.0.amxd) - 2022-03-13 - Go all-in on OSC, no more MIDI. Much simpler, faster, and better.
@@ -61,3 +62,6 @@ The TouchOSC layout includes two additional controls at the bottom of the screen
 
 #### I get a "Spinning Beach Ball" when I try to use zs-Knobbler3.
 This usually means that the Host value is incorrect. Max will do this if it is waiting for a DNS lookup to finish. Either fix the name, or use the IP address of the iPad.
+
+## TODOs
+* Add the ability to choose a custom fader color, or have fader color follow track color (?)
