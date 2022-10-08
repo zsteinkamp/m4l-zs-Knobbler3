@@ -1,7 +1,6 @@
 inlets=1;
 outlets=1;
 
-var log = require('./utils.js').log;
 var origInputs = {};
 
 var lo;

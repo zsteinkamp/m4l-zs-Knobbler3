@@ -7,11 +7,11 @@ This is a Max For Live device and a TouchOSC layout that provides a control surf
 
 The problem with in-the-box musicmaking is that the best control surfaces like the Push 2 are modal, requiring you to navigate menus to find parameters, and non-modal surfaces like the BCR-2000 require you to either remember knob assignments or write them on the device itself. This poses a barrier to switching between projects, or simply remembering knob assignments from day-to-day.
 
-With the zs-Knobbler3, you get 32 auto-labeling fader controls, 10 MIDI faders, and 8 MIDI buttons. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name of the mapped parameter.
+With the zs-Knobbler3, you get 32 auto-labeling fader controls. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name and color of the mapped parameter.
 
 The mappings are saved with your Live Set, so you can switch between sets and your mappings (and labels!) are preserved.
 
-It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow.
+It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow. Functionality of these features is described below.
 
 ## Installation / Setup
 
@@ -21,6 +21,8 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 
 ### Changelog
 
+* [1.1.6](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.6.amxd) - 2022-10-08 - Have the color of the fader on the iPad follow the color of the track.
+* [1.1.5](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.5.amxd) - 2022-10-08 - Show the name / path of the currently selected parameter above the horizontal slider. Be sure to use the latest `.tosc` file with this update!
 * [1.1.4](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.4.amxd) - 2022-10-08 - Fix a bug where choosing a different host from the dropdown would not update the OSC/UDP host or port destination.
 * [1.1.3](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.3.amxd) - 2022-09-08 - Fix bug with auto-discovery that prevented the iPad hostname from being set properly.
 * [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
@@ -64,4 +66,4 @@ The TouchOSC layout includes two additional controls at the bottom of the screen
 This usually means that the Host value is incorrect. Max will do this if it is waiting for a DNS lookup to finish. Either fix the name, or use the IP address of the iPad.
 
 ## TODOs
-* Add the ability to choose a custom fader color, or have fader color follow track color (?)
+* ...

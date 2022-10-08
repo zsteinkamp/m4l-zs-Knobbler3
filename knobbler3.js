@@ -186,6 +186,15 @@ function trackNameCallback(args) {
   }
 }
 
+function trackColorCallback(args) {
+  debug("TRACKCOLOR", args);
+  var args = arrayfromargs(args);
+  if (args[0] === 'color') {
+    param.trackColor = parseInt(args[1]).toString(16).toUpperCase() + 'FF';
+    sendColor();
+  }
+}
+
 function checkDevicePresent() {
   //debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
   if (!deviceObj.unquotedpath) {
@@ -253,6 +262,10 @@ function setPath(paramPath) {
     trackObj = new LiveAPI(trackNameCallback, matches[0]);
     trackObj.property = "name";
     param.trackName = trackObj.get("name");
+
+    trackColorObj = new LiveAPI(trackColorCallback, matches[0]);
+    trackColorObj.property = "color";
+    param.trackColor = parseInt(trackObj.get("color")).toString(16).toUpperCase() + 'FF';
   }
 
   //post("PARAM DATA", JSON.stringify(param), "\n");
@@ -276,6 +289,7 @@ function sendNames() {
   sendParamName();
   sendDeviceName();
   sendTrackName();
+  sendColor();
 }
 
 function sendParamName() {
@@ -296,6 +310,11 @@ function sendTrackName() {
   var trackName = param.trackName ? dequote(param.trackName.toString()) : nullString;
   outlet(OUTLET_TRACK_NAME, trackName);
   outlet(OUTLET_OSC, ['/track' + instanceId, trackName]);
+}
+function sendColor() {
+  if (!instanceIdIsValid()) { debug("invalid instanceId"); return; }
+  var trackColor = param.trackColor ? dequote(param.trackColor.toString()) : "FF0000FF";
+  outlet(OUTLET_OSC, ['/val' + instanceId + 'color', trackColor]);
 }
 
 function sendVal() {
