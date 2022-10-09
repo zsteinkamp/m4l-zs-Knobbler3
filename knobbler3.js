@@ -19,6 +19,7 @@ var paramObj = null;
 var paramNameObj = null;
 var deviceObj = null;
 var trackObj = null;
+var trackColorObj = null;
 
 var instanceId = 'NULL';
 
@@ -245,6 +246,8 @@ function setPath(paramPath) {
 
   var devicePath = deviceObj.unquotedpath;
 
+  debug("PARAMPATH=", paramObj.unquotedpath, "DEVICEPATH=", deviceObj.unquotedpath);
+
   // poll to see if the mapped device is still present
   deviceCheckerTask = new Task(checkDevicePresent)
   deviceCheckerTask.repeat();
@@ -268,7 +271,6 @@ function setPath(paramPath) {
   if (matches) {
     debug(matches[0]);
     trackObj = new LiveAPI(trackNameCallback, matches[0]);
-    trackObj.property = "name";
     if (trackObj.info.match(/property name str/)) {
       trackObj.property = "name";
       param.trackName = trackObj.get("name");
@@ -406,14 +408,11 @@ function receiveVal(val) {
 
       //post("PRE-SELOBJ\n");
       var selObj = new LiveAPI("live_set view selected_parameter");
-      // Only map things that have a 'value' property
-
       if (!selObj.unquotedpath) {
         post("No Live param is selected.\n");
       } else {
-        //post("SELOBJ", selObj.unquotedpath, "\n");
-        //post("SELOBJINFO", selObj.info, "\n");
-
+        debug("SELOBJ", selObj.unquotedpath, "SELOBJINFO", selObj.info);
+        // Only map things that have a 'value' property
         if (selObj.info.match(/property value/)) {
           setPath(selObj.unquotedpath);
         }
