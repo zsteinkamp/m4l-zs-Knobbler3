@@ -4,20 +4,36 @@ outlets=1;
 var origInputs = {};
 
 var lo;
+var debugLog = false;
+
+function debug() {
+  if (debugLog) {
+    post(debug.caller ? debug.caller.name : 'ROOT', Array.prototype.slice.call(arguments).join(" "), "\n");
+  }
+}
+
+debug("reloaded");
+
+function getTrackStatus(track) {
+  var airt = null;
+  var currentInput = null;
+  var noInput = null;
+  var allInputs = null;
+  var inputEnabled = false;
+  if (track.get("can_be_armed") == "1") {
+    var airt = JSON.parse(track.get('available_input_routing_types')).available_input_routing_types;
+    currentInput = JSON.parse(track.get('input_routing_type')).input_routing_type;
+    allInputs = airt[0];
+    noInput = airt[airt.length - 1]; // "No Input" is the last available input routing type
+    inputEnabled = currentInput.display_name !== noInput.display_name;
+  }
+
+  return { currentInput: currentInput, noInput: noInput, inputEnabled: inputEnabled, allInputs: allInputs };
+}
 
 function updateTrackDisplay(track) {
-  //if (track.get('is_foldable')[0] === 1) {
-  var airt = JSON.parse(track.get('available_input_routing_types')).available_input_routing_types;
-  if (!airt) {
-    outlet(0, ['/toggleInput', 0]);
-    return;
-  }
-  var currentInput = JSON.parse(track.get('input_routing_type')).input_routing_type;
-
-  var noInput = airt[airt.length - 1]; // "No Input" is the last available input routing type
-
-  if (currentInput.display_name !== noInput.display_name) {
-    //post(track.id + " -X- " + "INPUTS ON\n");
+  var trackStatus = getTrackStatus(track);
+  if (trackStatus.inputEnabled) {
     outlet(0, ['/toggleInput', 1]);
   } else {
     outlet(0, ['/toggleInput', 0]);
@@ -48,25 +64,18 @@ function init() {
 
 function toggle() {
   var liveObject = new LiveAPI('live_set view selected_track');
-  var airt = JSON.parse(liveObject.get('available_input_routing_types')).available_input_routing_types;
-  if (!airt) {
-    outlet(0, ['/toggleInput', 0]);
-    return;
-  }
-  var currentInput = JSON.parse(liveObject.get('input_routing_type')).input_routing_type;
-
-  var ret;
-  var noInput = airt[airt.length - 1]; // "No Input" is the last available input routing type
-
-  if (currentInput.display_name !== noInput.display_name) {
-    origInputs[liveObject.id] = currentInput;
+  var trackStatus = getTrackStatus(liveObject);
+  if (trackStatus.inputEnabled) {
+    origInputs[liveObject.id] = trackStatus.currentInput;
     // set to No Input
-    ret = noInput;
+    ret = trackStatus.noInput;
   } else {
-    // set to Original, default to All Inputs
-    ret = origInputs[liveObject.id] || airt[0];
+    // set to Original, TODO default to All Inputs
+    ret = origInputs[liveObject.id] || trackStatus.allInputs;
   }
 
-  liveObject.set('input_routing_type', ret);
+  if (trackStatus.currentInput) {
+    liveObject.set('input_routing_type', ret);
+  }
   updateTrackDisplay(liveObject);
 }

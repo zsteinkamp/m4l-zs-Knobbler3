@@ -186,11 +186,19 @@ function trackNameCallback(args) {
   }
 }
 
+function colorToString(colorVal) {
+  var retString = parseInt(colorVal).toString(16).toUpperCase();
+  for (var i = 0; i < 6 - retString.length; i++) {
+    retString = "0" + retString;
+  }
+  return retString + 'FF';
+}
+
 function trackColorCallback(args) {
   debug("TRACKCOLOR", args);
   var args = arrayfromargs(args);
   if (args[0] === 'color') {
-    param.trackColor = parseInt(args[1]).toString(16).toUpperCase() + 'FF';
+    param.trackColor = colorToString(args[1]);
     sendColor();
   }
 }
@@ -261,11 +269,16 @@ function setPath(paramPath) {
     debug(matches[0]);
     trackObj = new LiveAPI(trackNameCallback, matches[0]);
     trackObj.property = "name";
-    param.trackName = trackObj.get("name");
+    if (trackObj.info.match(/property name str/)) {
+      trackObj.property = "name";
+      param.trackName = trackObj.get("name");
+    } else if (param.path.match(/mixer_device/)) {
+      param.trackName = 'Mixer';
+    }
 
     trackColorObj = new LiveAPI(trackColorCallback, matches[0]);
     trackColorObj.property = "color";
-    param.trackColor = parseInt(trackObj.get("color")).toString(16).toUpperCase() + 'FF';
+    param.trackColor = colorToString(trackColorObj.get("color"));
   }
 
   //post("PARAM DATA", JSON.stringify(param), "\n");
@@ -314,6 +327,9 @@ function sendTrackName() {
 function sendColor() {
   if (!instanceIdIsValid()) { debug("invalid instanceId"); return; }
   var trackColor = param.trackColor ? dequote(param.trackColor.toString()) : "FF0000FF";
+  //debugLog=true;
+  debug("SENDCOLOR", instanceId, trackColor);
+  //debugLog=false;
   outlet(OUTLET_OSC, ['/val' + instanceId + 'color', trackColor]);
 }
 
