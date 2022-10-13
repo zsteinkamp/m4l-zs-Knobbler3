@@ -17,6 +17,8 @@ It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentP
 
 If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there. Also download the newest `.tosc` file. You can also download them directly via the links in *Changelog* below.
 
+You will need to have the [TouchOSC](https://hexler.net/touchosc) app installed on your iPad and configured to talk with your computer, along with the appropriate `.tosc` file on the iPad. Instructions for that are below.
+
 If you want to use the non-frozen device (e.g. to do your own development) you will need to install the `zero.*` package. To do this, open the Package Manager in Max, then search for 'zero'. The package to install is called `zero` and it is published by Cycling '74.
 
 ### Changelog
