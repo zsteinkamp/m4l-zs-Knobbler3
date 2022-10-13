@@ -3,6 +3,7 @@
 
 This is a Max For Live device and a TouchOSC layout that provides a control surface that auto-labels parameter controls when a parameter is mapped, and minimizes the steps required to map controls.
 
+Demo video:
 [![Demo Video](https://img.youtube.com/vi/ab4QYbsbNW4/0.jpg)](https://www.youtube.com/watch?v=ab4QYbsbNW4)
 
 The problem with in-the-box musicmaking is that the best control surfaces like the Push 2 are modal, requiring you to navigate menus to find parameters, and non-modal surfaces like the BCR-2000 require you to either remember knob assignments or write them on the device itself. This poses a barrier to switching between projects, or simply remembering knob assignments from day-to-day.
