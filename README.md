@@ -26,6 +26,7 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 ### Changelog
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files!
+* 1.1.8 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.tosc) - 2022-10-19 - Prevent feedback loop in OSC connectivitity.
 * 1.1.7 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.tosc) - 2022-10-10 - Have the color of the fader on the iPad follow the color of the track. Fixes an issue with ToggleInputEnable. First versioned .tosc file in the `frozen/` directory.
 * [1.1.3](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.3.amxd) - 2022-09-08 - Fix bug with auto-discovery that prevented the iPad hostname from being set properly.
 * [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
