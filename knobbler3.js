@@ -189,7 +189,8 @@ function trackNameCallback(args) {
 
 function colorToString(colorVal) {
   var retString = parseInt(colorVal).toString(16).toUpperCase();
-  for (var i = 0; i < 6 - retString.length; i++) {
+  var strlen = retString.length;
+  for (var i = 0; i < 6 - strlen; i++) {
     retString = "0" + retString;
   }
   return retString + 'FF';
