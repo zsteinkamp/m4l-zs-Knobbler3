@@ -9,7 +9,7 @@ Demo video:
 
 The problem with in-the-box musicmaking is that the best control surfaces like the Push 2 are modal, requiring you to navigate menus to find parameters, and non-modal surfaces like the BCR-2000 require you to either remember knob assignments or write them on the device itself. This poses a barrier to switching between projects, or simply remembering knob assignments from day-to-day.
 
-With the zs-Knobbler3, you get 32 auto-labeling fader controls. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name and color of the mapped parameter.
+With the zs-Knobbler3, you get 16 or 32 auto-labeling fader controls. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name and color of the mapped parameter.
 
 The mappings are saved with your Live Set, so you can switch between sets and your mappings (and labels!) are preserved.
 
@@ -17,7 +17,7 @@ It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentP
 
 ## Installation / Setup
 
-If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest version there. Also download the newest `.tosc` file. You can also download them directly via the links in *Changelog* below.
+If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest .zip file there. You can also download it directly via the links in *Changelog* below.
 
 You will need to have the [TouchOSC](https://hexler.net/touchosc) app installed on your iPad and configured to talk with your computer, along with the appropriate `.tosc` file on the iPad. Instructions for that are below.
 
