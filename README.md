@@ -3,7 +3,9 @@
 
 This is a Max For Live device and a TouchOSC layout that provides a control surface that auto-labels parameter controls when a parameter is mapped, and minimizes the steps required to map controls.
 
-Demo video:
+## [Download](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.0.zip) 
+
+### Demo video:
 
 [![Demo Video](https://img.youtube.com/vi/ab4QYbsbNW4/0.jpg)](https://www.youtube.com/watch?v=ab4QYbsbNW4)
 
