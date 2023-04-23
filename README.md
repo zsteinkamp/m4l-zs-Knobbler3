@@ -9,11 +9,11 @@ Demo video:
 
 The problem with in-the-box musicmaking is that the best control surfaces like the Push 2 are modal, requiring you to navigate menus to find parameters, and non-modal surfaces like the BCR-2000 require you to either remember knob assignments or write them on the device itself. This poses a barrier to switching between projects, or simply remembering knob assignments from day-to-day.
 
-With the zs-Knobbler3, you get 16 or 32 auto-labeling fader controls. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name and color of the mapped parameter.
+With the zs-Knobbler3, you get 16 auto-labeling fader controls. When you map one of the auto-labeling faders using this device, the TouchOSC layout instantly displays the parameter name, device name, and track name and color of the mapped parameter.
 
 The mappings are saved with your Live Set, so you can switch between sets and your mappings (and labels!) are preserved.
 
-It also integrates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow. Functionality of these features is described below.
+It also integrates my [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) device, which allows you to control the first 16 parameters of the currently selected device on the iPad. It also incorporates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow. Functionality of these features is described below.
 
 ## Installation / Setup
 
@@ -26,6 +26,7 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 ### Changelog
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
+* 1.2.0 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.0.zip) - 2023-04-23 - Fold the functionality of [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) into Knobbler. New tabbed TouchOSC layout that supports both.
 * 1.1.9 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.9.zip) - 2023-04-15 - Reliability fixes, small bugfixes.
 * 1.1.8 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.tosc) - 2022-10-19 - Prevent feedback loop in OSC connectivitity.
 * 1.1.7 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.tosc) - 2022-10-10 - Have the color of the fader on the iPad follow the color of the track. Fixes an issue with ToggleInputEnable. First versioned .tosc file in the `frozen/` directory.
@@ -39,11 +40,11 @@ Direct download links below. For 1.1.7 and newer, download both the `amxd` and `
 
 ### Mapping a Parameter
 
-Click a parameter in Ableton Live. It should be highlighted either with a rectangle (e.g. for small text boxes like Send Values) or its corners will be highlighted (e.g. knobs). Then touch the slider you want to map it to and slide up slightly, then remove your finger. You should see the parameter / device / track name show up, and the slider will jump to its current value.
+Ensure the "Knobbler" tab is selected on your iPad. Click a parameter in Ableton Live. It should be highlighted either with a rectangle (e.g. for small text boxes like Send Values) or its corners will be highlighted (e.g. knobs). Then touch the slider you want to map it to and slide up slightly, then remove your finger. You should see the parameter / device / track name show up, and the slider will jump to its current value.
 
 ### Unmapping a Parameter
 
-Click the red "X" in the upper-left corner of the TouchOSC interface. All of the sliders will change to solid red boxes. Tap the box or boxes that you want to unmap. Click the red button in the upper left corner to exit unmapping mode.
+With the Knobbler tab selected, click the red "X" in the upper-left corner of the TouchOSC interface. All of the sliders will change to solid red boxes. Tap the box or boxes that you want to unmap. Click the red button in the upper left corner to exit unmapping mode.
 
 If you would prefer to unmap in the computer, you can click the "x" next to the parameter in the zs-Knobbler3 device itself.
 
@@ -60,6 +61,10 @@ NOTE: Max/MSP and Max For Live are limited to only working with IPv4 addresses. 
 The zs-Knobbler3 uses OSC (not MIDI) to communicate parameter/device/track names and values to TouchOSC running on the iPad. It uses service auto-discovery (zeroconf) to know what OSC devices are on the network. The dropdown list should contain your iPad. If not, you can edit the Host and Port boxes manually.
 
 ![Auto-Discovery Dropdown](images/autoDiscovery.png)
+
+### Bluhand Functionality
+
+Bluhand lets you control the first 16 parameters of the currently selected device. Select the "Bluhand" tab in the tablet interface to see this work.
 
 ### CurrentParam and ToggleInput Functionality
 
