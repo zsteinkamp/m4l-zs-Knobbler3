@@ -354,6 +354,7 @@ function sendVal() {
 
   if (param.val === undefined || param.max === undefined || param.min === undefined) {
     outlet(OUTLET_OSC, ['/val' + instanceId, 0]);
+    outlet(OUTLET_OSC, ['/valStr' + instanceId, nullString]);
     return;
   }
 
@@ -370,10 +371,7 @@ function sendVal() {
 
   debug("SCALEDVALPROP", '/val' + instanceId, scaledValProp);
   outlet(OUTLET_OSC, ['/val' + instanceId, scaledValProp]);
-
-  if (paramObj) {
-    outlet(OUTLET_OSC, ['/valStr' + instanceId, paramObj.call('str_for_value', param.val)]);
-  }
+  outlet(OUTLET_OSC, ['/valStr' + instanceId, paramObj ?  paramObj.call('str_for_value', param.val) : nullString ]);
 }
 
 function receiveVal(val) {
