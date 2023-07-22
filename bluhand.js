@@ -142,9 +142,9 @@ function parametersCallback(args) {
       };
       data.objIdToParamIdx[paramKey(currParam.paramObj)] = paramIdx;
       currParam.name = currParam.paramObj.get("name").toString();
-      currParam.val = parseFloat(currParam.paramObj.get("value")),
-      currParam.min = parseFloat(currParam.paramObj.get("min")) || 0,
-      currParam.max = parseFloat(currParam.paramObj.get("max")) || 1,
+      currParam.val = parseFloat(currParam.paramObj.get("value"));
+      currParam.min = parseFloat(currParam.paramObj.get("min")) || 0;
+      currParam.max = parseFloat(currParam.paramObj.get("max")) || 1;
 
       message = ["/bparam" + paramIdx, currParam.name];
       outlet(OUTLET_OSC, message);
@@ -159,6 +159,7 @@ function parametersCallback(args) {
   // zero-out the rest of the param sliders
   for (paramIdx = data.params.length; paramIdx < MAX_PARAMS; paramIdx++) {
     outlet(OUTLET_OSC, ["/bparam" + paramIdx, nullString]);
+    outlet(OUTLET_OSC, ["/bvalStr" + paramIdx, nullString]);
     outlet(OUTLET_OSC, ["/bval" + paramIdx, 0]);
     outlet(OUTLET_OSC, ["/bval" + paramIdx + "color", "FF000099"]);
   }
@@ -176,6 +177,7 @@ function sendVal(paramIdx) {
   debug(message);
   outlet(OUTLET_OSC, message);
   outlet(OUTLET_OSC, ["/bval" + paramIdx + "color", data.trackColor]);
+  outlet(OUTLET_OSC, ["/bvalStr" + paramIdx, param.paramObj.call("str_for_value", outVal)]);
 }
 
 function valueCallback(args) {
@@ -217,6 +219,7 @@ function oscReceive(args) {
   if (param) {
     var value = param.min + (parseFloat(matches[2]) * (param.max - param.min));
     param.paramObj.set("value", value);
+    outlet(OUTLET_OSC, ["/bvalStr" + paramIdx, param.paramObj.call("str_for_value", value)]);
   }
 }
 

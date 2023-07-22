@@ -71,7 +71,7 @@ function instanceIdIsValid() {
 }
 
 function setupPathListenerIfNecessary() {
-  if (!instanceIdIsValid()) { return; }
+  if (!instanceIdIsValid()) { debug('early return - invalid instanceid'); return; }
   if (!pathListener) {
     pathListener = new ParameterListener("path" + instanceId, pathChangedCallback)
   }
@@ -106,6 +106,9 @@ function init() {
   if (paramObj) {
     // clean up callbacks when unmapping
     paramObj.id = 0;
+    if (instanceIdIsValid()) {
+      outlet(OUTLET_OSC, ['/valStr' + instanceId, nullString]);
+    }
   }
   paramObj = null;
   param = {
@@ -207,7 +210,7 @@ function trackColorCallback(args) {
 
 function checkDevicePresent() {
   //debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
-  if (!deviceObj.unquotedpath) {
+  if (deviceObj && !deviceObj.unquotedpath) {
     debug('DEVICE DELETED');
     init();
     return;
@@ -269,6 +272,7 @@ function setPath(paramPath) {
     ||
     devicePath.match(/^live_set master_track/)
   );
+
   if (matches) {
     debug(matches[0]);
     trackObj = new LiveAPI(trackNameCallback, matches[0]);
@@ -365,8 +369,11 @@ function sendVal() {
   scaledValProp = Math.max(scaledValProp, 0);
 
   debug("SCALEDVALPROP", '/val' + instanceId, scaledValProp);
-
   outlet(OUTLET_OSC, ['/val' + instanceId, scaledValProp]);
+
+  if (paramObj) {
+    outlet(OUTLET_OSC, ['/valStr' + instanceId, paramObj.call('str_for_value', param.val)]);
+  }
 }
 
 function receiveVal(val) {
@@ -391,6 +398,7 @@ function receiveVal(val) {
 
       //post('PARAMVAL', param.val, "\n");
       paramObj.set("value", param.val);
+      outlet(OUTLET_OSC, ['/valStr' + instanceId, paramObj.call('str_for_value', param.val)]);
     }
   } else {
     debug("GONNA_MAP", "ALLOWED=", allowMapping);
