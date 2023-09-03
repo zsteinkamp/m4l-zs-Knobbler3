@@ -86,10 +86,10 @@ function doInit() {
   debug();
 
   setupPathListenerIfNecessary();
-  var currPathVal = pathListener.getvalue()
+  var currPathVal = pathListener && pathListener.getvalue()
   debug('currPathVal=', currPathVal);
 
-  if (isValidPath(currPathVal)) {
+  if (currPathVal && isValidPath(currPathVal)) {
     setPath(currPathVal);
   } else {
     init();
