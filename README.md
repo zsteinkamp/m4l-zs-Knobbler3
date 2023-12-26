@@ -1,9 +1,10 @@
 # m4l-zs-Knobbler3
+
 ## An auto-labeling control surface for Ableton Live and TouchOSC.
 
 This is a Max For Live device and a TouchOSC layout that provides a control surface that auto-labels parameter controls when a parameter is mapped, and minimizes the steps required to map controls.
 
-## [>>> Download Latest Version <<<](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.1.zip) 
+## [>>> Download Latest Version <<<](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.0.zip)
 
 Demo video:
 
@@ -19,7 +20,7 @@ It also integrates my [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) devic
 
 ## Installation / Setup
 
-If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest .zip file there. You can also download it directly via the links in *Changelog* below.
+If you just want to download and install the device, then go to the [frozen/](https://github.com/zsteinkamp/m4l-zs-Knobbler3/tree/main/frozen) directory and download the newest .zip file there. You can also download it directly via the links in _Changelog_ below.
 
 You will need to have the [TouchOSC](https://hexler.net/touchosc) app installed on your iPad and configured to talk with your computer, along with the appropriate `.tosc` file on the iPad. Instructions for that are below.
 
@@ -28,16 +29,18 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 ### Changelog
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
-* 1.2.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.1.zip) - 2023-09-03 - Gracefully handle the case where the iPad cannot be found, i.e. prevent infinite OSC loops.
-* 1.2.0 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.0.zip) - 2023-04-23 - Fold the functionality of [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) into Knobbler. New tabbed TouchOSC layout that supports both.
-* 1.1.9 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.9.zip) - 2023-04-15 - Reliability fixes, small bugfixes.
-* 1.1.8 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.tosc) - 2022-10-19 - Prevent feedback loop in OSC connectivitity.
-* 1.1.7 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.tosc) - 2022-10-10 - Have the color of the fader on the iPad follow the color of the track. Fixes an issue with ToggleInputEnable. First versioned .tosc file in the `frozen/` directory.
-* [1.1.3](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.3.amxd) - 2022-09-08 - Fix bug with auto-discovery that prevented the iPad hostname from being set properly.
-* [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
-* [1.1.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.0.amxd) - 2022-03-13 - Go all-in on OSC, no more MIDI. Much simpler, faster, and better.
-* [1.0.1](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.1.amxd) - 2022-03-09 - More confidence in fixing path saving problem.
-* [1.0.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.0.amxd) - 2022-03-09 - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
+
+- 1.3.0 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.0.zip) - 2023-12-26 - Support parameter banks in the Bluhand function. Updates the TouchOSC layout with Next / Prev Bank controls.
+- 1.2.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.1.zip) - 2023-09-03 - Gracefully handle the case where the iPad cannot be found, i.e. prevent infinite OSC loops.
+- 1.2.0 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.0.zip) - 2023-04-23 - Fold the functionality of [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) into Knobbler. New tabbed TouchOSC layout that supports both.
+- 1.1.9 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.9.zip) - 2023-04-15 - Reliability fixes, small bugfixes.
+- 1.1.8 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.8.tosc) - 2022-10-19 - Prevent feedback loop in OSC connectivitity.
+- 1.1.7 - [amxd](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.amxd) [tosc](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.7.tosc) - 2022-10-10 - Have the color of the fader on the iPad follow the color of the track. Fixes an issue with ToggleInputEnable. First versioned .tosc file in the `frozen/` directory.
+- [1.1.3](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.3.amxd) - 2022-09-08 - Fix bug with auto-discovery that prevented the iPad hostname from being set properly.
+- [1.1.2](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.2.amxd) - 2022-04-28 - Integrate [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into this device and the TouchOSC layout.
+- [1.1.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.1.0.amxd) - 2022-03-13 - Go all-in on OSC, no more MIDI. Much simpler, faster, and better.
+- [1.0.1](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.1.amxd) - 2022-03-09 - More confidence in fixing path saving problem.
+- [1.0.0](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.0.0.amxd) - 2022-03-09 - First solid, frozen release. Added zeroconf, fixed bug with inserting tracks or devices (updating parameter path when necessary).
 
 ## Setup
 
@@ -80,10 +83,13 @@ The TouchOSC layout includes two additional controls at the bottom of the screen
 ## Common Problems
 
 #### I get a "Spinning Beach Ball" when I try to use zs-Knobbler3.
+
 This usually means that the Host value is incorrect. Max will do this if it is waiting for a DNS lookup to finish. Either fix the name, or use the IP address of the iPad.
 
 #### My iPad doesn't show up in the Auto-Discovery dropdown.
+
 Generally this indicates that either your computer, iPad, or your network is configured not to allow multicast UDP, also known as mDNS or Zeroconf. If you cannot work around that, then you can enter your iPad's IP address and listening port in the hostname box in the zs-Knobbler-3 device. You can get your iPad's IP address by going to Settings ... Wi-Fi ... then tap your wi-fi network name. The IP address is displayed next to "IP Address".
 
 ## TODOs
-* ...
+
+- ...
