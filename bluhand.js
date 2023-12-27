@@ -188,6 +188,7 @@ function refreshParams() {
   for (paramIdx = data.params.length; paramIdx < PAGE_SIZE + 1; paramIdx++) {
     outlet(OUTLET_OSC, ['/bparam' + paramIdx, nullString])
     outlet(OUTLET_OSC, ['/bval' + paramIdx, 0])
+    outlet(OUTLET_OSC, ['/bvalStr' + paramIdx, '- - -'])
     outlet(OUTLET_OSC, ['/bval' + paramIdx + 'color', 'FF000099'])
   }
 
@@ -215,6 +216,10 @@ function sendVal(paramIdx) {
   debug(message)
   outlet(OUTLET_OSC, message)
   outlet(OUTLET_OSC, ['/bval' + paramIdx + 'color', data.trackColor])
+  outlet(OUTLET_OSC, [
+    '/bvalStr' + paramIdx,
+    param.paramObj.call('str_for_value', outVal),
+  ])
 }
 
 function valueCallback(args) {
@@ -253,6 +258,10 @@ function receiveVal(matches) {
   if (param) {
     var value = param.min + parseFloat(matches[2]) * (param.max - param.min)
     param.paramObj.set('value', value)
+    outlet(OUTLET_OSC, [
+      '/bvalStr' + paramIdx,
+      param.paramObj.call('str_for_value', value),
+    ])
   }
 }
 
