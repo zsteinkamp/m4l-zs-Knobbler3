@@ -30,6 +30,7 @@ If you want to use the non-frozen device (e.g. to do your own development) you w
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
 
+- 1.3.1-noBLU - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1-noBLU.zip) - 2024-04-10 - Temporarily remove Bluhand functionality because it seems to cause crashes in Live 12.
 - 1.3.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1.zip) - 2023-12-27 - Support parameter banks in the Bluhand function. Updates the TouchOSC layout with Next / Prev Bank controls. (bugfixes)
 - 1.2.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.1.zip) - 2023-09-03 - Gracefully handle the case where the iPad cannot be found, i.e. prevent infinite OSC loops.
 - 1.2.0 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.0.zip) - 2023-04-23 - Fold the functionality of [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) into Knobbler. New tabbed TouchOSC layout that supports both.
