@@ -81,7 +81,7 @@ function colorToString(colorVal) {
 }
 
 function trackColorCallback(args) {
-  debug('TRACKCOLOR', args)
+  //debug('TRACKCOLOR', args)
   var args = arrayfromargs(args)
   if (args[0] === 'color') {
     param.trackColor = colorToString(args[1])
@@ -90,7 +90,7 @@ function trackColorCallback(args) {
 }
 
 function trackNameCallback(args) {
-  debug('TRACK ID', parseInt(this.id))
+  //debug('TRACK ID', parseInt(this.id))
   debug(args)
   if (parseInt(this.id) === 0) {
     data.trackName = 'none'
@@ -98,12 +98,12 @@ function trackNameCallback(args) {
     data.trackName = this.get('name')
   }
   data.trackColor = colorToString(this.get('color'))
-  debug('TRACKCOLOR', data.trackColor)
+  //debug('TRACKCOLOR', data.trackColor)
   updateDeviceName()
 }
 
 function deviceNameCallback(args) {
-  debug('DEVICE ID', parseInt(this.id))
+  //debug('DEVICE ID', parseInt(this.id))
   if (parseInt(this.id) === 0) {
     data.deviceName = 'none'
   } else {
@@ -117,8 +117,7 @@ function updateDeviceName() {
   if (!(data.trackName && data.deviceName)) {
     message = ['/bcurrDeviceName', 'No device selected']
   }
-  debug(message)
-  outlet(OUTLET_OSC, message)
+  sendOsc(message)
 }
 
 function paramKey(paramObj) {
@@ -172,11 +171,13 @@ function refreshParams() {
     }
     data.objIdToParamIdx[paramKey(currParam.paramObj)] = paramIdx
     currParam.name = currParam.paramObj.get('name').toString()
-    ;(currParam.val = parseFloat(currParam.paramObj.get('value'))),
-      (currParam.min = parseFloat(currParam.paramObj.get('min')) || 0),
-      (currParam.max = parseFloat(currParam.paramObj.get('max')) || 1),
-      (message = ['/bparam' + paramIdx, currParam.name])
-    outlet(OUTLET_OSC, message)
+    currParam.val = parseFloat(currParam.paramObj.get('value'))
+    debug('CURRPARAMVAL=[' + currParam.val + '] name=' + currParam.name)
+    currParam.min = parseFloat(currParam.paramObj.get('min')) || 0
+    currParam.max = parseFloat(currParam.paramObj.get('max')) || 1
+
+    message = ['/bparam' + paramIdx, currParam.name]
+    sendOsc(message)
 
     data.params.push(currParam)
     data.params[paramIdx].paramObj.property = 'value'
@@ -186,16 +187,15 @@ function refreshParams() {
 
   // zero-out the rest of the param sliders
   for (paramIdx = data.params.length; paramIdx < PAGE_SIZE + 1; paramIdx++) {
-    outlet(OUTLET_OSC, ['/bparam' + paramIdx, nullString])
-    outlet(OUTLET_OSC, ['/bval' + paramIdx, 0])
-    outlet(OUTLET_OSC, ['/bvalStr' + paramIdx, '- - -'])
-    outlet(OUTLET_OSC, ['/bval' + paramIdx + 'color', 'FF000099'])
+    sendOsc(['/bparam' + paramIdx, nullString])
+    sendOsc(['/bval' + paramIdx, 0])
+    sendOsc(['/bvalStr' + paramIdx, '- - -'])
+    sendOsc(['/bval' + paramIdx + 'color', 'FF000099'])
   }
 
   // update the current bank string
   message = ['/bTxtCurrBank', 'Bank ' + (data.currBank + 1)]
-  debug(message)
-  outlet(OUTLET_OSC, message)
+  sendOsc(message)
 }
 
 function sendVal(paramIdx) {
@@ -213,22 +213,22 @@ function sendVal(paramIdx) {
   var outVal = (param.val - param.min) / (param.max - param.min)
 
   var message = ['/bval' + paramIdx, outVal]
-  debug(message)
-  outlet(OUTLET_OSC, message)
-  outlet(OUTLET_OSC, ['/bval' + paramIdx + 'color', data.trackColor])
-  outlet(OUTLET_OSC, [
+  sendOsc(message)
+  sendOsc(['/bval' + paramIdx + 'color', data.trackColor])
+  sendOsc([
     '/bvalStr' + paramIdx,
-    param.paramObj.call('str_for_value', outVal),
+    param.paramObj.call('str_for_value', param.val),
   ])
 }
 
 function valueCallback(args) {
+  debug('VALUE CALLBACK')
   var argsArr = arrayfromargs(args)
   if (argsArr[0] !== 'value') {
     return
   }
 
-  debug('TOPARGS', argsArr)
+  //debug('TOPARGS', argsArr)
   var paramIdx = data.objIdToParamIdx[paramKey(this)]
   if (paramIdx === undefined) {
     debug(
@@ -258,7 +258,7 @@ function receiveVal(matches) {
   if (param) {
     var value = param.min + parseFloat(matches[2]) * (param.max - param.min)
     param.paramObj.set('value', value)
-    outlet(OUTLET_OSC, [
+    sendOsc([
       '/bvalStr' + paramIdx,
       param.paramObj.call('str_for_value', value),
     ])
@@ -267,20 +267,20 @@ function receiveVal(matches) {
 
 function receiveBank(matches) {
   //debugLog = true
-  debug(matches)
+  //debug(matches)
   if (data.paramIdArr.length === 0) {
     return
   }
   var maxBank = Math.floor(data.paramIdArr.length / PAGE_SIZE)
-  debug(data.paramIdArr.length, PAGE_SIZE, maxBank)
+  //debug(data.paramIdArr.length, PAGE_SIZE, maxBank)
   if (matches[1] === 'Next') {
-    debug('NextBank')
+    //debug('NextBank')
     if (data.currBank < maxBank) {
       data.currBank += 1
       refreshParams()
     }
   } else {
-    debug('PrevBank')
+    //debug('PrevBank')
     if (data.currBank > 0) {
       data.currBank -= 1
       refreshParams()
@@ -290,14 +290,14 @@ function receiveBank(matches) {
 }
 
 function oscReceive(args) {
-  debug(args)
+  //debug(args)
   var matchers = [
     { regex: /^\/bval(\d+) ([0-9.-]+)$/, fn: receiveVal },
     { regex: /^\/bbank(Prev|Next)$/, fn: receiveBank },
   ]
   for (var i = 0; i < matchers.length; i++) {
     var matches = args.match(matchers[i].regex)
-    debug(JSON.stringify(matches))
+    //debug(JSON.stringify(matches))
     if (matches) {
       return matchers[i].fn(matches)
     }
@@ -316,6 +316,11 @@ function debug() {
       '\n'
     )
   }
+}
+
+function sendOsc(message) {
+  debug(message)
+  outlet(OUTLET_OSC, message)
 }
 
 function dequote(str) {
