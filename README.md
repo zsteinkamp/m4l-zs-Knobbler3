@@ -6,7 +6,7 @@ This is a Max For Live device and a TouchOSC layout that provides a control surf
 
 ### Download
 
-See the "Releases" section to the right to download .zip files.
+See the [Releases](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases) section to the right to download .zip files.
 
 Old versions are linked from the Changelog section below.
 
@@ -82,6 +82,7 @@ Generally this indicates that either your computer, iPad, or your network is con
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
 
+- 1.3.2 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.2/zs-Knobbler3-1.3.2.zip) - Fixed a bug in Bluhand that caused the wrong initial value to be displayed on the iPad. Added a colored line to the device display corresponding to the device color.
 - 1.3.1-noBLU - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1-noBLU.zip) - 2024-04-10 - Temporarily remove Bluhand functionality because it seems to cause crashes in Live 12.
 - 1.3.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1.zip) - 2023-12-27 - Support parameter banks in the Bluhand function. Updates the TouchOSC layout with Next / Prev Bank controls. (bugfixes)
 - 1.2.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.2.1.zip) - 2023-09-03 - Gracefully handle the case where the iPad cannot be found, i.e. prevent infinite OSC loops.
