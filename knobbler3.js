@@ -61,7 +61,8 @@ function isValidPath(path) {
 }
 
 function dequote(str) {
-  return str.replace(/^"|"$/g, '')
+  debug(str, typeof str)
+  return str.toString().replace(/^"|"$/g, '')
 }
 
 function setInstanceId(id) {
@@ -153,6 +154,18 @@ function setMax(val) {
   debug(val)
   outMax = parseFloat(val) / 100
   sendVal()
+}
+
+function clearCustomName() {
+  debug()
+  param.customName = null
+  sendParamName()
+}
+
+function setCustomName(args) {
+  debug(args)
+  param.customName = args
+  sendParamName()
 }
 
 function paramValueCallback(args) {
@@ -256,14 +269,13 @@ function setPath(paramPath) {
   paramNameObj = new LiveAPI(paramNameCallback, paramPath)
   paramNameObj.property = 'name'
 
-  param = {
-    id: parseInt(paramObj.id),
-    path: paramObj.unquotedpath,
-    val: parseFloat(paramObj.get('value')),
-    min: parseFloat(paramObj.get('min')) || 0,
-    max: parseFloat(paramObj.get('max')) || 1,
-    name: paramObj.get('name'),
-  }
+  param.id = parseInt(paramObj.id)
+  param.path = paramObj.unquotedpath
+  param.val = parseFloat(paramObj.get('value'))
+  param.min = parseFloat(paramObj.get('min')) || 0
+  param.max = parseFloat(paramObj.get('max')) || 1
+  param.name = paramObj.get('name')
+
   debug('SET PARAM', JSON.stringify(param))
 
   deviceObj = new LiveAPI(deviceNameCallback, paramObj.get('canonical_parent'))
@@ -278,6 +290,10 @@ function setPath(paramPath) {
   )
 
   // poll to see if the mapped device is still present
+  if (deviceCheckerTask && deviceCheckerTask.cancel) {
+    deviceCheckerTask.cancel()
+    deviceCheckerTask = null
+  }
   deviceCheckerTask = new Task(checkDevicePresent)
   deviceCheckerTask.repeat()
 
@@ -337,12 +353,13 @@ function sendNames() {
 }
 
 function sendParamName() {
-  debug()
   if (!instanceIdIsValid()) {
     debug('invalid instanceId')
     return
   }
-  var paramName = param.name ? dequote(param.name.toString()) : nullString
+  var paramName = dequote(
+    (param.customName || param.name || nullString).toString()
+  )
   outlet(OUTLET_PARAM_NAME, paramName)
   outlet(OUTLET_OSC, ['/param' + instanceId, paramName])
 }

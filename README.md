@@ -20,7 +20,7 @@ With the zs-Knobbler3, you get 16 auto-labeling fader controls. When you map one
 
 The mappings are saved with your Live Set, so you can switch between sets and your mappings (and labels!) are preserved.
 
-~~It also integrates my [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) device, which allows you to control the first 16 parameters of the currently selected device on the iPad.~~ It also incorporates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow. Functionality of these features is described below.
+It also integrates my [Bluhand](https://github.com/zsteinkamp/m4l-Bluhand) device, which allows you to control the first 16 parameters of the currently selected device on the iPad. It also incorporates [CurrentParamKnob](https://github.com/zsteinkamp/m4l-CurrentParamKnob) and [ToggleInput](https://github.com/zsteinkamp/m4l-js-toggleInput) functionality into the device and layout, which are two utilities I found to be essential to a good workflow. Functionality of these features is described below.
 
 ## Installation / Setup
 
@@ -82,6 +82,7 @@ Generally this indicates that either your computer, iPad, or your network is con
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
 
+- 1.3.3 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.3/zs-Knobbler3-1.3.3.zip) - Added the ability to edit parameter names. Set the name to empty to revert to the original name.
 - 1.3.2 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.2/zs-Knobbler3-1.3.2.zip) - Fixed a bug in Bluhand that caused the wrong initial value to be displayed on the iPad. Added a colored line to the device display corresponding to the device color.
 - 1.3.1-noBLU - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1-noBLU.zip) - 2024-04-10 - Temporarily remove Bluhand functionality because it seems to cause crashes in Live 12.
 - 1.3.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1.zip) - 2023-12-27 - Support parameter banks in the Bluhand function. Updates the TouchOSC layout with Next / Prev Bank controls. (bugfixes)
