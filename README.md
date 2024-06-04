@@ -82,7 +82,8 @@ Generally this indicates that either your computer, iPad, or your network is con
 
 Direct download links below. For 1.1.7 and newer, download both the `amxd` and `tosc` files! 1.1.9 introduced the tosc-16 layout option and the .zip download.
 
-- 1.3.3 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.3/zs-Knobbler3-1.3.3.zip) - Added the ability to edit parameter names. Set the name to empty to revert to the original name.
+- 1.3.4 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.4/zs-Knobbler3-1.3.4.zip) - (#9) Debounce events related to changing UI focus. This results in a massive speedup in the Live UI. Thank you @rds2024-3004! Also removed many debug statements that could chew up CPU.
+- 1.3.3 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.3/zs-Knobbler3-1.3.3.zip) - (#9) Added the ability to edit parameter names. Set the name to empty to revert to the original name.
 - 1.3.2 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/releases/download/1.3.2/zs-Knobbler3-1.3.2.zip) - Fixed a bug in Bluhand that caused the wrong initial value to be displayed on the iPad. Added a colored line to the device display corresponding to the device color.
 - 1.3.1-noBLU - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1-noBLU.zip) - 2024-04-10 - Temporarily remove Bluhand functionality because it seems to cause crashes in Live 12.
 - 1.3.1 - [zip](https://github.com/zsteinkamp/m4l-zs-Knobbler3/raw/main/frozen/zs-Knobbler3-1.3.1.zip) - 2023-12-27 - Support parameter banks in the Bluhand function. Updates the TouchOSC layout with Next / Prev Bank controls. (bugfixes)

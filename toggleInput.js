@@ -21,9 +21,9 @@ function getTrackStatus() {
   var noInput = null;
   var allInputs = null;
   var inputEnabled = false;
-  debug(currTrack.type);
+  //debug(currTrack.type);
   if (currTrack.get("is_foldable") == "0" && currTrack.get("can_be_frozen") == "1") {
-    debug("IN HERE");
+    //debug("IN HERE");
     var airt = JSON.parse(currTrack.get('available_input_routing_types')).available_input_routing_types;
     currentInput = JSON.parse(currTrack.get('input_routing_type')).input_routing_type;
     allInputs = airt[0];
@@ -32,13 +32,13 @@ function getTrackStatus() {
   }
 
   var ret = { currentInput: currentInput, noInput: noInput, inputEnabled: inputEnabled, allInputs: allInputs }
-  debug(JSON.stringify(ret));
+  //debug(JSON.stringify(ret));
   return ret;
 }
 
 function updateTrackDisplay() {
   var trackStatus = getTrackStatus();
-  debug('inputEnabled?', trackStatus.inputEnabled);
+  //debug('inputEnabled?', trackStatus.inputEnabled);
   if (trackStatus.inputEnabled) {
     outlet(0, ['/toggleInput', 1]);
   } else {
@@ -49,12 +49,12 @@ function updateTrackDisplay() {
 function currentTrackCallback(a) {
   var args = arrayfromargs(a);
   if (args.shift() !== 'selected_track') {
-    debug("RETURNING1");
+    //debug("RETURNING1");
     return;
   }
   var trackId = args.join(" ");
   if (trackId === 'id 0') {
-    debug("RETURNING2");
+    //debug("RETURNING2");
     return;
   }
   currTrack = new LiveAPI(trackId);
@@ -69,7 +69,7 @@ function init() {
 }
 
 function toggle() {
-  debug("IN TOGGLE");
+  //debug("IN TOGGLE");
   var trackStatus = getTrackStatus();
   if (trackStatus.inputEnabled) {
     origInputs[currTrack.id] = trackStatus.currentInput;

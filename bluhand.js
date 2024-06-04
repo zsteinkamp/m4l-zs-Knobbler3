@@ -22,6 +22,10 @@ var data = {
   trackName: null,
   deviceName: null,
   params: [],
+  debouncers: {
+    deviceName: null,
+    params: null,
+  },
   observers: {
     trackName: null,
     deviceName: null,
@@ -46,9 +50,18 @@ function bang() {
 // INTERNAL METHODS
 ////////////////////////////////////////////////
 
-function setupListener() {
-  debug('SETUP LISTENERS')
+function debounce(id, future) {
+  if (data.debouncers[id]) {
+    data.debouncers[id].cancel()
+  }
+  data.debouncers[id] = new Task(future)
+  data.debouncers[id].schedule(300)
+}
 
+function setupListener() {
+  //debug('SETUP LISTENERS')
+
+  // TRACK NAME
   data.observers.trackName = new LiveAPI(
     trackNameCallback,
     'live_set view selected_track'
@@ -56,6 +69,7 @@ function setupListener() {
   data.observers.trackName.mode = 1
   data.observers.trackName.property = 'name'
 
+  // DEVICE NAME
   data.observers.deviceName = new LiveAPI(
     deviceNameCallback,
     'live_set appointed_device'
@@ -63,6 +77,7 @@ function setupListener() {
   data.observers.deviceName.mode = 1
   data.observers.deviceName.property = 'name'
 
+  // DEVICE PARAMETERS
   data.observers.params = new LiveAPI(
     parametersCallback,
     'live_set appointed_device'
@@ -80,18 +95,9 @@ function colorToString(colorVal) {
   return retString + 'FF'
 }
 
-function trackColorCallback(args) {
-  //debug('TRACKCOLOR', args)
-  var args = arrayfromargs(args)
-  if (args[0] === 'color') {
-    param.trackColor = colorToString(args[1])
-    sendColor()
-  }
-}
-
 function trackNameCallback(args) {
   //debug('TRACK ID', parseInt(this.id))
-  debug(args)
+  //debug(args)
   if (parseInt(this.id) === 0) {
     data.trackName = 'none'
   } else {
@@ -113,21 +119,23 @@ function deviceNameCallback(args) {
 }
 
 function updateDeviceName() {
-  var message = ['/bcurrDeviceName', data.trackName + ' > ' + data.deviceName]
-  if (!(data.trackName && data.deviceName)) {
-    message = ['/bcurrDeviceName', 'No device selected']
-  }
-  sendOsc(message)
+  debounce('deviceName', function () {
+    var message = ['/bcurrDeviceName', data.trackName + ' > ' + data.deviceName]
+    if (!(data.trackName && data.deviceName)) {
+      message = ['/bcurrDeviceName', 'No device selected']
+    }
+    sendOsc(message)
+  })
 }
 
 function paramKey(paramObj) {
   var key = paramObj.id.toString()
-  debug(key)
+  //debug(key)
   return key
 }
 
 function parametersCallback(args) {
-  debug(JSON.stringify(args))
+  //debug(JSON.stringify(args))
   if (parseInt(this.id) === 0) {
     return
   }
@@ -137,10 +145,10 @@ function parametersCallback(args) {
   data.currBank = 0
 
   //debugLog = true
-  debug(data.paramIdArr.join(','))
+  //debug(data.paramIdArr.join(','))
   //debugLog = false
 
-  refreshParams()
+  debounce('params', refreshParams)
 }
 
 function refreshParams() {
@@ -172,7 +180,7 @@ function refreshParams() {
     data.objIdToParamIdx[paramKey(currParam.paramObj)] = paramIdx
     currParam.name = currParam.paramObj.get('name').toString()
     currParam.val = parseFloat(currParam.paramObj.get('value'))
-    debug('CURRPARAMVAL=[' + currParam.val + '] name=' + currParam.name)
+    //debug('CURRPARAMVAL=[' + currParam.val + '] name=' + currParam.name)
     currParam.min = parseFloat(currParam.paramObj.get('min')) || 0
     currParam.max = parseFloat(currParam.paramObj.get('max')) || 1
 
@@ -222,7 +230,7 @@ function sendVal(paramIdx) {
 }
 
 function valueCallback(args) {
-  debug('VALUE CALLBACK')
+  //debug('VALUE CALLBACK')
   var argsArr = arrayfromargs(args)
   if (argsArr[0] !== 'value') {
     return
@@ -231,21 +239,21 @@ function valueCallback(args) {
   //debug('TOPARGS', argsArr)
   var paramIdx = data.objIdToParamIdx[paramKey(this)]
   if (paramIdx === undefined) {
-    debug(
-      'no data.objIdToParamIdx for',
-      paramIdx,
-      JSON.stringify(data.objIdToParamIdx)
-    )
+    //debug(
+    //  'no data.objIdToParamIdx for',
+    //  paramIdx,
+    //  JSON.stringify(data.objIdToParamIdx)
+    //)
     return
   }
   if (!data.params[paramIdx]) {
-    debug('no data.params for', paramIdx, JSON.stringify(data.params))
+    //debug('no data.params for', paramIdx, JSON.stringify(data.params))
     return
   }
 
   // ensure the value is indeed changed (vs a feedback loop)
   if (argsArr[1] === data.params[paramIdx].val) {
-    debug(paramIdx, paramIdx.val, 'NO CHANGE')
+    //debug(paramIdx, paramIdx.val, 'NO CHANGE')
     return
   }
   data.params[paramIdx].val = argsArr[1]
@@ -319,7 +327,7 @@ function debug() {
 }
 
 function sendOsc(message) {
-  debug(message)
+  //debug(message)
   outlet(OUTLET_OSC, message)
 }
 

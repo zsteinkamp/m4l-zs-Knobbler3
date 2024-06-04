@@ -61,18 +61,18 @@ function isValidPath(path) {
 }
 
 function dequote(str) {
-  debug(str, typeof str)
+  //debug(str, typeof str)
   return str.toString().replace(/^"|"$/g, '')
 }
 
 function setInstanceId(id) {
-  debug(id)
+  //debug(id)
   instanceId = parseInt(id)
 }
 
 function pathChangedCallback(data) {
-  debug('parameter value changed: ' + data.name)
-  debug('new value: ' + data.value)
+  //debug('parameter value changed: ' + data.name)
+  //debug('new value: ' + data.value)
   setPath(data.value)
 }
 
@@ -82,7 +82,7 @@ function instanceIdIsValid() {
 
 function setupPathListenerIfNecessary() {
   if (!instanceIdIsValid()) {
-    debug('early return - invalid instanceid')
+    //debug('early return - invalid instanceid')
     return
   }
   if (!pathListener) {
@@ -99,11 +99,11 @@ function setPathParam(path) {
 }
 
 function doInit() {
-  debug()
+  //debug()
 
   setupPathListenerIfNecessary()
   var currPathVal = pathListener && pathListener.getvalue()
-  debug('currPathVal=', currPathVal)
+  //debug('currPathVal=', currPathVal)
 
   if (currPathVal && isValidPath(currPathVal)) {
     setPath(currPathVal)
@@ -113,12 +113,12 @@ function doInit() {
 }
 
 function clearPath() {
-  debug()
+  //debug()
   init()
 }
 
 function init() {
-  debug('INIT')
+  //debug('INIT')
   if (paramObj) {
     // clean up callbacks when unmapping
     paramObj.id = 0
@@ -145,25 +145,25 @@ function init() {
 }
 
 function setMin(val) {
-  debug(val)
+  //debug(val)
   outMin = parseFloat(val) / 100
   sendVal()
 }
 
 function setMax(val) {
-  debug(val)
+  //debug(val)
   outMax = parseFloat(val) / 100
   sendVal()
 }
 
 function clearCustomName() {
-  debug()
+  //debug()
   param.customName = null
   sendParamName()
 }
 
 function setCustomName(args) {
-  debug(args)
+  //debug(args)
   param.customName = args
   sendParamName()
 }
@@ -178,7 +178,7 @@ function paramValueCallback(args) {
   // We accomplish this by keeping a timestamp of the last time OSC data was
   // received, and only taking action here if more than 500ms has passed.
 
-  debug(args, 'ALLOW_UPDATES=', allowParamValueUpdates)
+  //debug(args, 'ALLOW_UPDATES=', allowParamValueUpdates)
   if (allowParamValueUpdates) {
     // ensure 500ms has passed since receiving a value
     var args = arrayfromargs(args)
@@ -187,13 +187,13 @@ function paramValueCallback(args) {
       param.val = args[1]
       sendVal()
     } else {
-      debug('SUMPIN ELSE', args[0], args[1])
+      //debug('SUMPIN ELSE', args[0], args[1])
     }
   }
 }
 
 function paramNameCallback(args) {
-  debug(args)
+  //debug(args)
   var args = arrayfromargs(args)
   if (args[0] === 'name') {
     param.name = args[1]
@@ -202,7 +202,7 @@ function paramNameCallback(args) {
 }
 
 function deviceNameCallback(args) {
-  debug(args)
+  //debug(args)
   var args = arrayfromargs(args)
   if (args[0] === 'name') {
     param.deviceName = args[1]
@@ -211,7 +211,7 @@ function deviceNameCallback(args) {
 }
 
 function trackNameCallback(args) {
-  debug(args)
+  //debug(args)
   var args = arrayfromargs(args)
   if (args[0] === 'name') {
     param.trackName = args[1]
@@ -229,7 +229,7 @@ function colorToString(colorVal) {
 }
 
 function trackColorCallback(args) {
-  debug('TRACKCOLOR', args)
+  //debug('TRACKCOLOR', args)
   var args = arrayfromargs(args)
   if (args[0] === 'color') {
     param.trackColor = colorToString(args[1])
@@ -240,28 +240,28 @@ function trackColorCallback(args) {
 function checkDevicePresent() {
   //debug('PO=', paramObj.unquotedpath, 'PP=', param.path, 'PL=', pathListener.getvalue());
   if (deviceObj && !deviceObj.unquotedpath) {
-    debug('DEVICE DELETED')
+    //debug('DEVICE DELETED')
     init()
     return
   }
 
   // check if path has changed (e.g. inserting a track above this one)
   if (paramObj && paramObj.unquotedpath !== param.path) {
-    debug(
-      'path is different  NEW=',
-      paramObj.unquotedpath,
-      '  OLD=',
-      param.path
-    )
+    //debug(
+    //  'path is different  NEW=',
+    //  paramObj.unquotedpath,
+    //  '  OLD=',
+    //  param.path
+    //)
     pathListener.setvalue_silent(paramObj.unquotedpath)
     param.path = paramObj.unquotedpath
   }
 }
 
 function setPath(paramPath) {
-  debug(paramPath)
+  //debug(paramPath)
   if (!isValidPath(paramPath)) {
-    debug('skipping', paramPath)
+    //debug('skipping', paramPath)
     return
   }
   paramObj = new LiveAPI(paramValueCallback, paramPath)
@@ -276,18 +276,18 @@ function setPath(paramPath) {
   param.max = parseFloat(paramObj.get('max')) || 1
   param.name = paramObj.get('name')
 
-  debug('SET PARAM', JSON.stringify(param))
+  //debug('SET PARAM', JSON.stringify(param))
 
   deviceObj = new LiveAPI(deviceNameCallback, paramObj.get('canonical_parent'))
 
   var devicePath = deviceObj.unquotedpath
 
-  debug(
-    'PARAMPATH=',
-    paramObj.unquotedpath,
-    'DEVICEPATH=',
-    deviceObj.unquotedpath
-  )
+  //debug(
+  //  'PARAMPATH=',
+  //  paramObj.unquotedpath,
+  //  'DEVICEPATH=',
+  //  deviceObj.unquotedpath
+  //)
 
   // poll to see if the mapped device is still present
   if (deviceCheckerTask && deviceCheckerTask.cancel) {
@@ -312,7 +312,7 @@ function setPath(paramPath) {
     devicePath.match(/^live_set master_track/)
 
   if (matches) {
-    debug(matches[0])
+    //debug(matches[0])
     trackObj = new LiveAPI(trackNameCallback, matches[0])
     if (trackObj.info.match(/property name str/)) {
       trackObj.property = 'name'
@@ -345,7 +345,7 @@ function refresh() {
 }
 
 function sendNames() {
-  debug(param.name, param.deviceName, param.trackName)
+  //debug(param.name, param.deviceName, param.trackName)
   sendParamName()
   sendDeviceName()
   sendTrackName()
@@ -354,7 +354,7 @@ function sendNames() {
 
 function sendParamName() {
   if (!instanceIdIsValid()) {
-    debug('invalid instanceId')
+    //debug('invalid instanceId')
     return
   }
   var paramName = dequote(
@@ -365,7 +365,7 @@ function sendParamName() {
 }
 function sendDeviceName() {
   if (!instanceIdIsValid()) {
-    debug('invalid instanceId')
+    //debug('invalid instanceId')
     return
   }
   var deviceName = param.deviceName
@@ -376,7 +376,7 @@ function sendDeviceName() {
 }
 function sendTrackName() {
   if (!instanceIdIsValid()) {
-    debug('invalid instanceId')
+    //debug('invalid instanceId')
     return
   }
   var trackName = param.trackName
@@ -390,15 +390,13 @@ var DEFAULT_RED = 'FF0000FF'
 
 function sendColor() {
   if (!instanceIdIsValid()) {
-    debug('invalid instanceId')
+    //debug('invalid instanceId')
     return
   }
   var trackColor = param.trackColor
     ? dequote(param.trackColor.toString())
     : DEFAULT_RED
-  //debugLog=true;
-  debug('SENDCOLOR', instanceId, trackColor)
-  //debugLog=false;
+  //debug('SENDCOLOR', instanceId, trackColor)
   outlet(OUTLET_OSC, ['/val' + instanceId + 'color', trackColor])
 
   if (trackColor === DEFAULT_RED) {
@@ -439,7 +437,7 @@ function sendVal() {
   // the value, expressed as a proportion between the param min and max
   var valProp = (param.val - param.min) / (param.max - param.min)
 
-  debug('VALPROP', valProp, JSON.stringify(param), 'OUTMINMAX', outMin, outMax)
+  //debug('VALPROP', valProp, JSON.stringify(param), 'OUTMINMAX', outMin, outMax)
 
   // scale the param proportion value to the output min/max proportion
   var scaledValProp = (valProp - outMin) / (outMax - outMin)
@@ -447,7 +445,7 @@ function sendVal() {
   scaledValProp = Math.min(scaledValProp, 1)
   scaledValProp = Math.max(scaledValProp, 0)
 
-  debug('SCALEDVALPROP', '/val' + instanceId, scaledValProp)
+  //debug('SCALEDVALPROP', '/val' + instanceId, scaledValProp)
   outlet(OUTLET_OSC, ['/val' + instanceId, scaledValProp])
   outlet(OUTLET_OSC, [
     '/valStr' + instanceId,
@@ -485,7 +483,7 @@ function receiveVal(val) {
       ])
     }
   } else {
-    debug('GONNA_MAP', 'ALLOWED=', allowMapping)
+    //debug('GONNA_MAP', 'ALLOWED=', allowMapping)
     // If we get a OSC value but are unassigned, trigger a mapping.
     // This removes a step from typical mapping.
     if (allowMapping) {
@@ -508,7 +506,7 @@ function receiveVal(val) {
       if (!selObj.unquotedpath) {
         post('No Live param is selected.\n')
       } else {
-        debug('SELOBJ', selObj.unquotedpath, 'SELOBJINFO', selObj.info)
+        //debug('SELOBJ', selObj.unquotedpath, 'SELOBJINFO', selObj.info)
         // Only map things that have a 'value' property
         if (selObj.info.match(/property value/)) {
           setPath(selObj.unquotedpath)
