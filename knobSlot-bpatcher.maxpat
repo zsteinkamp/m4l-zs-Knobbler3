@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 976.0, 411.0, 1533.0, 1247.0 ],
+		"rect" : [ 1083.0, 457.0, 1533.0, 1247.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,71 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-39",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 698.0, 60.0, 115.0, 22.0 ],
+					"text" : "receive #1-SELDEV"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"annotation" : "Selects the device containing this parameter.",
+					"annotation_name" : "Select Device",
+					"appearance" : 2,
+					"fontsize" : 9.0,
+					"hidden" : 1,
+					"id" : "obj-7",
+					"maxclass" : "live.text",
+					"mode" : 0,
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"parameter_enable" : 1,
+					"patching_rect" : [ 134.75, 432.0, 25.0, 25.0 ],
+					"pictures" : [ "multimap-unmap.svg", "multimap-unmap.svg" ],
+					"presentation" : 1,
+					"presentation_rect" : [ 123.0, 20.5, 15.0, 15.0 ],
+					"saved_attribute_attributes" : 					{
+						"valueof" : 						{
+							"parameter_annotation_name" : "Select Device",
+							"parameter_enum" : [ "val1", "val2" ],
+							"parameter_info" : "Selects the device containing this parameter.",
+							"parameter_invisible" : 2,
+							"parameter_linknames" : 1,
+							"parameter_longname" : "SelDevice#1",
+							"parameter_mmax" : 1,
+							"parameter_modmode" : 0,
+							"parameter_shortname" : "Select Device",
+							"parameter_type" : 2
+						}
+
+					}
+,
+					"text" : ">",
+					"texton" : "x",
+					"transition" : 1,
+					"varname" : "SelDevice#1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-31",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 134.75, 469.5, 77.0, 22.0 ],
+					"text" : "selectDevice"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-16",
 					"maxclass" : "message",
@@ -148,6 +213,7 @@
 							"parameter_invisible" : 1,
 							"parameter_linknames" : 1,
 							"parameter_longname" : "eparam#1",
+							"parameter_modmode" : 0,
 							"parameter_shortname" : "path",
 							"parameter_type" : 3
 						}
@@ -412,6 +478,7 @@
 							"parameter_invisible" : 1,
 							"parameter_linknames" : 1,
 							"parameter_longname" : "path#1",
+							"parameter_modmode" : 0,
 							"parameter_shortname" : "path",
 							"parameter_type" : 3
 						}
@@ -712,7 +779,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 442.0, 640.0, 150.0, 18.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 64.0, 1.0, 57.0, 18.0 ],
+					"presentation_rect" : [ 64.0, 1.0, 38.0, 18.0 ],
 					"saved_attribute_attributes" : 					{
 						"textcolor" : 						{
 							"expression" : "themecolor.live_lcd_control_fg"
@@ -799,7 +866,7 @@
 					"parameter_mappable" : 0,
 					"patching_rect" : [ 307.0, 329.0, 46.0, 15.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 104.0, 20.5, 34.0, 15.0 ],
+					"presentation_rect" : [ 93.0, 21.0, 34.0, 15.0 ],
 					"prototypename" : "amount",
 					"saved_attribute_attributes" : 					{
 						"activebgcolor" : 						{
@@ -831,6 +898,7 @@
 							"parameter_linknames" : 1,
 							"parameter_longname" : "targetMax#1",
 							"parameter_mmax" : 100.0,
+							"parameter_modmode" : 0,
 							"parameter_shortname" : "Max",
 							"parameter_speedlim" : 0.0,
 							"parameter_type" : 1,
@@ -864,7 +932,7 @@
 					"parameter_mappable" : 0,
 					"patching_rect" : [ 227.0, 329.0, 46.0, 15.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 68.0, 20.5, 34.0, 15.0 ],
+					"presentation_rect" : [ 64.0, 21.0, 34.0, 15.0 ],
 					"prototypename" : "amount",
 					"saved_attribute_attributes" : 					{
 						"activebgcolor" : 						{
@@ -896,6 +964,7 @@
 							"parameter_linknames" : 1,
 							"parameter_longname" : "targetMin#1",
 							"parameter_mmax" : 100.0,
+							"parameter_modmode" : 0,
 							"parameter_shortname" : "Min",
 							"parameter_speedlim" : 0.0,
 							"parameter_type" : 1,
@@ -936,6 +1005,7 @@
 							"parameter_linknames" : 1,
 							"parameter_longname" : "unmap#1",
 							"parameter_mmax" : 1,
+							"parameter_modmode" : 0,
 							"parameter_shortname" : "Unmap",
 							"parameter_type" : 2
 						}
@@ -944,6 +1014,7 @@
 ,
 					"text" : "X",
 					"texton" : "x",
+					"transition" : 1,
 					"varname" : "unmap#1"
 				}
 
@@ -1072,9 +1143,24 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-7", 0 ],
+					"order" : 3,
+					"source" : [ "obj-30", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-8", 0 ],
 					"order" : 1,
 					"source" : [ "obj-30", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-37", 0 ],
+					"source" : [ "obj-31", 0 ]
 				}
 
 			}
@@ -1160,6 +1246,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-9", 0 ],
 					"source" : [ "obj-38", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-31", 0 ],
+					"source" : [ "obj-39", 0 ]
 				}
 
 			}
@@ -1285,6 +1378,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-31", 0 ],
+					"source" : [ "obj-7", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-44", 0 ],
 					"source" : [ "obj-8", 0 ]
 				}
@@ -1310,6 +1410,7 @@
 			"obj-1" : [ "eparam#1", "path", 0 ],
 			"obj-28" : [ "unmap#1", "Unmap", 0 ],
 			"obj-3" : [ "targetMax#1", "Max", 0 ],
+			"obj-7" : [ "SelDevice#1", "Select Device", 0 ],
 			"obj-8" : [ "targetMin#1", "Min", 0 ],
 			"obj-86" : [ "path#1", "path", 0 ],
 			"parameterbanks" : 			{

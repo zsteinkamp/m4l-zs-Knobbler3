@@ -41,6 +41,17 @@ var allowParamValueUpdatesTask = null
 var initMappingPath = null
 var pathListener = null
 
+function printOut(msg) {
+  post(
+    '[',
+    instanceId,
+    ']',
+    printOut.caller ? printOut.caller.name : 'ROOT',
+    Array.prototype.slice.call(arguments).join(' '),
+    '\n'
+  )
+}
+
 function debug() {
   if (debugLog) {
     post(
@@ -280,7 +291,7 @@ function setPath(paramPath) {
 
   deviceObj = new LiveAPI(deviceNameCallback, paramObj.get('canonical_parent'))
 
-  var devicePath = deviceObj.unquotedpath
+  param.devicePath = deviceObj.unquotedpath
 
   //debug(
   //  'PARAMPATH=',
@@ -307,9 +318,9 @@ function setPath(paramPath) {
 
   // Try to get the track name
   var matches =
-    devicePath.match(/^live_set tracks \d+/) ||
-    devicePath.match(/^live_set return_tracks \d+/) ||
-    devicePath.match(/^live_set master_track/)
+    param.devicePath.match(/^live_set tracks \d+/) ||
+    param.devicePath.match(/^live_set return_tracks \d+/) ||
+    param.devicePath.match(/^live_set master_track/)
 
   if (matches) {
     //debug(matches[0])
@@ -514,4 +525,16 @@ function receiveVal(val) {
       }
     }
   }
+}
+
+function selectDevice() {
+  if (!param.devicePath) {
+    printOut('devicePath not set')
+    return
+  }
+  var api = new LiveAPI();
+  api.path = param.devicePath;
+  var id = api.id
+  api.path = ['live_set', 'view'];
+  api.call('select_device', ['id', id]);
 }

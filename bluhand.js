@@ -105,7 +105,7 @@ function trackNameCallback(args) {
   }
   data.trackColor = colorToString(this.get('color'))
   //debug('TRACKCOLOR', data.trackColor)
-  updateDeviceName()
+  updateDeviceName() // implementation is debounced
 }
 
 function deviceNameCallback(args) {
@@ -115,7 +115,7 @@ function deviceNameCallback(args) {
   } else {
     data.deviceName = this.get('name')
   }
-  updateDeviceName()
+  updateDeviceName() // implementation is debounced
 }
 
 function updateDeviceName() {
