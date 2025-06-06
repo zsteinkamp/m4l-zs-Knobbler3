@@ -2,7 +2,7 @@
 
 ======
 
-## NOTE: Development has stopped in this repo and now happens in [Knobbler4](https://github.com/zsteinkamp/m4l-zs-Knobbler4).
+## NOTE: Development has stopped in this repo and now happens in [Knobbler4](https://github.com/zsteinkamp/m4l-Knobbler4).
 
 ======
 
