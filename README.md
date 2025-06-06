@@ -1,5 +1,12 @@
 # m4l-zs-Knobbler3
 
+======
+
+## NOTE: Development has stopped in this repo and now happens in [Knobbler4](https://github.com/zsteinkamp/m4l-zs-Knobbler4).
+
+======
+
+
 ## An auto-labeling control surface for Ableton Live and TouchOSC.
 
 This is a Max For Live device and a TouchOSC layout that provides a control surface that auto-labels parameter controls when a parameter is mapped, and minimizes the steps required to map controls.
